@@ -1,9 +1,9 @@
 //
-// File:       practice.c
+// File:       MatrixMult.c
 //
-// Abstract:   A simple compute example showing basic usage of OpenCL which
-//             calculates the function a*x[i] + b*y[i] for a buffer of
-//             floating point values.
+// Abstract:   A simple example showing basic usage of OpenCL which
+//             calculates the multiplication of 2 matrices represented as a 1D 
+//             array for a buffer of floating point values.
 //             
 //
 // Version:    <1.0>
@@ -304,9 +304,7 @@ int main(int argc, char** argv)
         exit(1);
     }
     // Calculate results sequentially on the host
-    int sum;
-    int j;
-    int k;
+    int sum, j, k; 
     for(i = 0; i < count; i++)
     {
         for(j = 0; j < count; j++)
@@ -333,7 +331,7 @@ int main(int argc, char** argv)
     
     // Print a brief summary detailing the results
     //
-    printf("Computed '%d/%d' correct values!\n", correct, count);
+    // printf("Computed '%d/%d' correct values!\n", correct, count);
     
     // Shutdown and cleanup
     //
