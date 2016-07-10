@@ -121,7 +121,7 @@ int main(int argc, char** argv)
     // Fill our data set with random float values
     //
     int i = 0;
-    unsigned int count = 2;
+    unsigned int count = 3;
     for(i = 0; i < count * count; i++)
     {
         data1[i] = 1+i;
