@@ -197,7 +197,7 @@ int main(int argc, char** argv)
 
     //Use function and load the kernel source from .cl files in the same folder
     //
-    char *KernelSource = load_program_source("MatrixMult.cl");
+    char *KernelSource = load_program_source("../OpenCL/MatrixMult.cl");
 
     // Create the compute program from the source buffer
     //
