@@ -1,9 +1,9 @@
 //
-// File:       MatrixMult.c
+// File:       polynomial.c
 //
-// Abstract:   A simple example showing basic usage of OpenCL which
-//             calculates the multiplication of 2 matrices represented as a 1D 
-//             array for a buffer of integer values.
+// Abstract:   A simple compute example showing basic usage of OpenCL which
+//             calculates the function a*x[i] + b*y[i] for a buffer of
+//             floating point values.
 //             
 //
 // Version:    <1.0>
@@ -92,32 +92,19 @@ static char* load_program_source(const char *filename)
     return source;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void printMatrix(int *array, int size )
-{
-    int i, j;
-    for(i=0; i < size; i++)
-    {
-	for(j=0; j < size; j++)
-        {
-	    printf("[%d][%d]: %d \t", i, j, array[i*size+j]);
-	}
-	printf("\n");
-    }
-    printf("\n");
-}
 
 int main(int argc, char** argv)
 {
     int err;                            // error code returned from api calls
       
-    int data1[DATA_SIZE];             // original data set 1 given to device
-    int data2[DATA_SIZE];             // original data set 2 given to device  
-    int results_host[DATA_SIZE];      // results calculated in the host sequentially
-    int results_device[DATA_SIZE];    // results returned from device
+    float data1[DATA_SIZE];             // original data set 1 given to device
+    float data2[DATA_SIZE];             // original data set 2 given to device  
+    float results_host[DATA_SIZE];      // results calculated in the host sequentially
+    float results_device[DATA_SIZE];    // results returned from device
     unsigned int correct;               // number of correct results returned
     char str_temp[MEMORY_SIZE];         // char array to store platform and device information
-    size_t global[2];                   // global domain size for our calculation
-    size_t local[2];                    // local domain size for our calculation
+    size_t global;                      // global domain size for our calculation
+    size_t local;                       // local domain size for our calculation
     
     cl_platform_id platform_id[2];      // compute device platform id
     cl_device_id device_id;             // compute device id 
@@ -131,14 +118,14 @@ int main(int argc, char** argv)
     cl_mem output;                      // device memory used for the output array
     cl_event event;
     
-    // Fill our data set with random int values
+    // Fill our data set with random float values
     //
     int i = 0;
-    unsigned int size = 3;
-    for(i = 0; i < size * size; i++)
+    unsigned int count = DATA_SIZE;
+    for(i = 0; i < count; i++)
     {
-        data1[i] = 2+i;
-        data2[i] = 3*i+1;
+        data1[i] = i;
+        data2[i] = 2*i;
     }
         
 
@@ -210,7 +197,7 @@ int main(int argc, char** argv)
 
     //Use function and load the kernel source from .cl files in the same folder
     //
-    char *KernelSource = load_program_source("MatrixMult.cl");
+    char *KernelSource = load_program_source("polynomial.cl");
 
     // Create the compute program from the source buffer
     //
@@ -237,7 +224,7 @@ int main(int argc, char** argv)
 
     // Create the compute kernel in the program we wish to run
     //
-    kernel = clCreateKernel(program, "matrixMultiply", &err);
+    kernel = clCreateKernel(program, "myFunction", &err);
     if (!kernel || err != CL_SUCCESS)
     {
         printf("Error: Failed to create compute kernel! - %d\n",err);
@@ -246,9 +233,9 @@ int main(int argc, char** argv)
 
     // Create the input and output arrays in device memory for our calculation
     //
-    input1 = clCreateBuffer(context, CL_MEM_READ_ONLY,  sizeof(int) * size * size, NULL, NULL);
-    input2 = clCreateBuffer(context, CL_MEM_READ_ONLY,  sizeof(int) * size * size, NULL, NULL);
-    output = clCreateBuffer(context, CL_MEM_WRITE_ONLY, sizeof(int) * size * size, NULL, NULL);
+    input1 = clCreateBuffer(context, CL_MEM_READ_ONLY,  sizeof(float) * count, NULL, NULL);
+    input2 = clCreateBuffer(context, CL_MEM_READ_ONLY,  sizeof(float) * count, NULL, NULL);
+    output = clCreateBuffer(context, CL_MEM_WRITE_ONLY, sizeof(float) * count, NULL, NULL);
     if (!input1 || !input2 || !output)
     {
         printf("Error: Failed to allocate device memory!\n");
@@ -257,8 +244,8 @@ int main(int argc, char** argv)
     
     // Write our data set into the input array in device memory 
     //
-    err = clEnqueueWriteBuffer(commands, input1, CL_TRUE, 0, sizeof(int) * size * size, data1, 0, NULL, NULL);
-    err |= clEnqueueWriteBuffer(commands, input2, CL_TRUE, 0, sizeof(int) * size * size, data2, 0, NULL, NULL);
+    err = clEnqueueWriteBuffer(commands, input1, CL_TRUE, 0, sizeof(float) * count, data1, 0, NULL, NULL);
+    err |= clEnqueueWriteBuffer(commands, input2, CL_TRUE, 0, sizeof(float) * count, data2, 0, NULL, NULL);
     if (err != CL_SUCCESS)
     {
         printf("Error: Failed to write to source array 1!\n");
@@ -271,7 +258,6 @@ int main(int argc, char** argv)
     err  = clSetKernelArg(kernel, 0, sizeof(cl_mem), &input1);
     err |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &input2);
     err |= clSetKernelArg(kernel, 2, sizeof(cl_mem), &output);
-    err |= clSetKernelArg(kernel, 3, sizeof(int), &size);
     if (err != CL_SUCCESS)
     {
         printf("Error: Failed to set kernel arguments! %d\n", err);
@@ -290,9 +276,8 @@ int main(int argc, char** argv)
     // Execute the kernel over the entire range of our 1d input data set
     // using the maximum number of work group items for this device
     //
-    global[0] = size;
-    global[1] = size;
-    err = clEnqueueNDRangeKernel(commands, kernel, 2, NULL, &global, NULL, 0, NULL, &event);
+    global = count;
+    err = clEnqueueNDRangeKernel(commands, kernel, 1, NULL, &global, NULL, 0, NULL, &event);
     if (err)
     {
         printf("Error: Failed to execute kernel!-%d\n",err);
@@ -312,45 +297,31 @@ int main(int argc, char** argv)
 
     // Read back the results from the device to verify the output
     //
-    err = clEnqueueReadBuffer( commands, output, CL_TRUE, 0, sizeof(int) * size * size, results_device, 0, NULL, NULL );  
+    err = clEnqueueReadBuffer( commands, output, CL_TRUE, 0, sizeof(float) * count, results_device, 0, NULL, NULL );  
     if (err != CL_SUCCESS)
     {
         printf("Error: Failed to read output array! %d\n", err);
         exit(1);
     }
     // Calculate results sequentially on the host
-    int sum, j, k; 
-    for(i = 0; i < size; i++)
+    for(i = 0; i < count; i++)
     {
-        for(j = 0; j < size; j++)
-        {
-            sum = 0;
-            for(k = 0; k < size; k++)
-                sum += data1[i*size+k] * data2[k*size+j];
-            results_host[i*size+j] = sum;
-        }
-        
+         results_host[i] = 9 * data1[i] + 7 * data2[i];
     }
     // Validate our results
     //
     correct = 0;
-    printf ("Input1: \n");
-    printMatrix(data1, size );
-    printf ("Input2: \n");
-    printMatrix(data2, size );
-    printf ("Host result: \n");
-    printMatrix(results_host, size );
-    printf ("Device result: \n");
-    printMatrix(results_device, size );
-    for(i = 0; i < (size * size); i++)
+    for(i = 0; i < count; i++)
     {
+        // printf("Host result[%i]: %f\n", i, results_host[i]);
+        // printf("Device result[%i]: %f\n\n", i, results_device[i]);
         if(results_device[i] == results_host[i])
             correct++;
     }
     
     // Print a brief summary detailing the results
     //
-    printf("RESULT: Computed '%d/%d' correct values!\n", correct, size * size);
+    printf("Computed '%d/%d' correct values!\n", correct, count);
     
     // Shutdown and cleanup
     //
