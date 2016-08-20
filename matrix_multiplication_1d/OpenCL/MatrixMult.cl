@@ -1,9 +1,16 @@
-__kernel void myFunction(                                                     
-	__global float* input1,   
-	__global float* input2,                                           
-	__global float* output)                                           
+__kernel void matrixMultiply(                                                     
+	__global int* input1,   
+	__global int* input2,                                           
+	__global int* output,
+	int size)                                           
 {                                                                      
-   int i = get_global_id(0);                                                                                                
-   output[i] = 9 * input1[i] + 7 * input2[i];                              
+   int i = get_global_id(0); 
+   int j = get_global_id(1); 
+   int sum = 0;                                                                                       
+   for(int k=0; k<size; k++) 
+   {
+   		sum += (input1[i*size + k] * input2[k*size + j]);
+   }
+   output[i*size+j] = sum;     
 }                                                                      
 
