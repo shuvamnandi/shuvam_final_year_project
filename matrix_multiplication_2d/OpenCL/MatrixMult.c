@@ -63,13 +63,13 @@
 #else
 #include <CL/cl.h>
 #endif
+#include "papi.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
 // Use a static data size for simplicity
 //
-#define DATA_SIZE (1024)
-#define GLOBAL_SIZE (1024)
+#define GLOBAL_SIZE (512)
 #define MEMORY_SIZE (128)
 #define LOCAL_SIZE (8)
 
@@ -132,7 +132,8 @@ int main(int argc, char** argv)
     cl_mem input2;                      // device memory used for the second input array
     cl_mem output;                      // device memory used for the output array
     cl_event event;
-    
+    register long long ptimer1=0;
+    register long long ptimer2=0;
     // Fill our data set with random int values
     //
     int i;
@@ -296,7 +297,7 @@ int main(int argc, char** argv)
     global[1] = GLOBAL_SIZE;
     local_size[0] = LOCAL_SIZE;
     local_size[1] = LOCAL_SIZE;
-    err = clEnqueueNDRangeKernel(commands, kernel, 2, NULL, &global, &local_size, 0, NULL, &event);
+    err = clEnqueueNDRangeKernel(commands, kernel, 2, NULL, &global, NULL, 0, NULL, &event);
     if (err)
     {
         printf("Error: Failed to execute kernel!-%d\n",err);
@@ -323,6 +324,7 @@ int main(int argc, char** argv)
     }
     // Calculate results sequentially on the host
     int sum, j, k; 
+    ptimer1 = PAPI_get_real_usec();
     for(i = 0; i < GLOBAL_SIZE; i++)
     {
         for(j = 0; j < GLOBAL_SIZE; j++)
@@ -333,27 +335,23 @@ int main(int argc, char** argv)
             results_host[i*GLOBAL_SIZE+j] = sum;
         }    
     }
+    ptimer2 = PAPI_get_real_usec();
+    printf("cl:main timing:PAPI Host Computation Timing: %llu us\n",(ptimer2-ptimer1));
     // Validate our results
     //
     correct = 0;
-    //printf ("Input1: \n");
-    //printMatrix(data1, GLOBAL_SIZE );
-    //printf ("Input2: \n");
-    //printMatrix(data2, GLOBAL_SIZE );
-    //printf ("Host result: \n");
-    //printMatrix(results_host, GLOBAL_SIZE );
-    //printf ("Device result: \n");
-    //printMatrix(results_device, GLOBAL_SIZE );
+    ptimer1 = PAPI_get_real_usec();
     for(i = 0; i < (GLOBAL_SIZE * GLOBAL_SIZE); i++)
     {
         if(results_device[i] == results_host[i])
             correct++;
     }
+    ptimer2 = PAPI_get_real_usec();
     
     // Print a brief summary about the results
     //
     printf("RESULT: Computed '%d/%d' correct values!\n", correct, GLOBAL_SIZE * GLOBAL_SIZE);
-    
+    printf("cl:main timing:PAPI Host Validation Timing: %llu us\n", (ptimer2-ptimer1));
     // Shutdown and cleanup
     //
     clReleaseMemObject(input1);
