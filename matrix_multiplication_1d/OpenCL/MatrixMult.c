@@ -69,7 +69,9 @@
 // Use a static data size for simplicity
 //
 #define DATA_SIZE (1024)
+#define GLOBAL_SIZE (1024)
 #define MEMORY_SIZE (128)
+#define LOCAL_SIZE (2)
 
 ////////////////////////////////////////////////////////////////////////////////
 // Function to extract cl kernel for execution
@@ -109,16 +111,16 @@ void printMatrix(int *array, int size )
 int main(int argc, char** argv)
 {
     int err;                            // error code returned from api calls
-      
-    int data1[DATA_SIZE];             // original data set 1 given to device
-    int data2[DATA_SIZE];             // original data set 2 given to device  
-    int results_host[DATA_SIZE];      // results calculated in the host sequentially
-    int results_device[DATA_SIZE];    // results returned from device
+    int *data1;                         // original data set 1 given to device
+    int *data2;                         // original data set 2 given to device  
+    int *results_host;                  // results calculated in the host sequentially
+    int *results_device;                // results returned from device
     unsigned int correct;               // number of correct results returned
     char str_temp[MEMORY_SIZE];         // char array to store platform and device information
     size_t global[2];                   // global domain size for our calculation
     size_t local[2];                    // local domain size for our calculation
-    
+    size_t local_size[2];                  // local work size
+    int size;                           // argument to pass to device
     cl_platform_id platform_id[2];      // compute device platform id
     cl_device_id device_id;             // compute device id 
     cl_context context;                 // compute context
@@ -133,15 +135,20 @@ int main(int argc, char** argv)
     
     // Fill our data set with random int values
     //
-    int i = 0;
-    unsigned int size = 3;
-    for(i = 0; i < size * size; i++)
+    int i;
+    data1 = (int *)malloc(GLOBAL_SIZE * GLOBAL_SIZE * sizeof(int));
+    data2 = (int *)malloc(GLOBAL_SIZE * GLOBAL_SIZE * sizeof(int));
+    results_host = (int *)malloc(GLOBAL_SIZE * GLOBAL_SIZE * sizeof(int));
+    results_device = (int *)malloc(GLOBAL_SIZE * GLOBAL_SIZE * sizeof(int));
+    
+    size = GLOBAL_SIZE;
+    
+    for(i = 0; i < GLOBAL_SIZE * GLOBAL_SIZE; i++)
     {
         data1[i] = 2+i;
         data2[i] = 3*i+1;
     }
         
-
     //Connect to a platform on device
     err = clGetPlatformIDs(2, &platform_id, NULL);
     if (err != CL_SUCCESS)
@@ -169,7 +176,6 @@ int main(int argc, char** argv)
     {
         printf("Error getting platform version!\n");
     }
-
     // Connect to a compute device
     //
     int gpu = 1;
@@ -189,7 +195,6 @@ int main(int argc, char** argv)
     {
         printf("Error getting device name!\n");
     }
-  
     // Create a compute context 
     //
     context = clCreateContext(0, 1, &device_id, NULL, NULL, &err);
@@ -198,7 +203,6 @@ int main(int argc, char** argv)
         printf("Error: Failed to create a compute context!\n");
         return EXIT_FAILURE;
     }
-
     // Create a command commands
     //
     commands = clCreateCommandQueue(context, device_id, CL_QUEUE_PROFILING_ENABLE, &err);
@@ -207,7 +211,7 @@ int main(int argc, char** argv)
         printf("Error: Failed to create a command commands!\n");
         return EXIT_FAILURE;
     }
-
+    
     //Use function and load the kernel source from .cl files in the same folder
     //
     char *KernelSource = load_program_source("MatrixMult.cl");
@@ -220,7 +224,6 @@ int main(int argc, char** argv)
         printf("Error: Failed to create compute program!\n");
         return EXIT_FAILURE;
     }
-
     // Build the program executable
     //
     err = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
@@ -234,7 +237,6 @@ int main(int argc, char** argv)
         printf("%s\n", buffer);
         exit(1);
     }
-
     // Create the compute kernel in the program we wish to run
     //
     kernel = clCreateKernel(program, "matrixMultiply", &err);
@@ -243,28 +245,26 @@ int main(int argc, char** argv)
         printf("Error: Failed to create compute kernel! - %d\n",err);
         exit(1);
     }
-
+    
     // Create the input and output arrays in device memory for our calculation
     //
-    input1 = clCreateBuffer(context, CL_MEM_READ_ONLY,  sizeof(int) * size * size, NULL, NULL);
-    input2 = clCreateBuffer(context, CL_MEM_READ_ONLY,  sizeof(int) * size * size, NULL, NULL);
-    output = clCreateBuffer(context, CL_MEM_WRITE_ONLY, sizeof(int) * size * size, NULL, NULL);
+    input1 = clCreateBuffer(context, CL_MEM_READ_ONLY,  sizeof(int) * GLOBAL_SIZE * GLOBAL_SIZE, NULL, NULL);
+    input2 = clCreateBuffer(context, CL_MEM_READ_ONLY,  sizeof(int) * GLOBAL_SIZE * GLOBAL_SIZE, NULL, NULL);
+    output = clCreateBuffer(context, CL_MEM_WRITE_ONLY, sizeof(int) * GLOBAL_SIZE * GLOBAL_SIZE, NULL, NULL);
     if (!input1 || !input2 || !output)
     {
         printf("Error: Failed to allocate device memory!\n");
         exit(1);
     }    
-    
     // Write our data set into the input array in device memory 
     //
-    err = clEnqueueWriteBuffer(commands, input1, CL_TRUE, 0, sizeof(int) * size * size, data1, 0, NULL, NULL);
-    err |= clEnqueueWriteBuffer(commands, input2, CL_TRUE, 0, sizeof(int) * size * size, data2, 0, NULL, NULL);
+    err = clEnqueueWriteBuffer(commands, input1, CL_TRUE, 0, sizeof(int) * GLOBAL_SIZE * GLOBAL_SIZE, data1, 0, NULL, NULL);
+    err |= clEnqueueWriteBuffer(commands, input2, CL_TRUE, 0, sizeof(int) * GLOBAL_SIZE * GLOBAL_SIZE, data2, 0, NULL, NULL);
     if (err != CL_SUCCESS)
     {
         printf("Error: Failed to write to source array 1!\n");
         exit(1);
     }
-    
     // Set the arguments to our compute kernel
     //
     err = 0;
@@ -277,28 +277,31 @@ int main(int argc, char** argv)
         printf("Error: Failed to set kernel arguments! %d\n", err);
         exit(1);
     }
-
     // Get the maximum work group size for executing the kernel on the device
     //
+    
     err = clGetKernelWorkGroupInfo(kernel, device_id, CL_KERNEL_WORK_GROUP_SIZE, sizeof(local), &local, NULL);
     if (err != CL_SUCCESS)
     {
         printf("Error: Failed to retrieve kernel work group info! %d\n", err);
         exit(1);
     }
+    printf("Local[0]: %d \n", local[0]);
+    printf("Local[1]: %d \n", local[1]);
 
     // Execute the kernel over the entire range of our 1d input data set
     // using the maximum number of work group items for this device
     //
-    global[0] = size;
-    global[1] = size;
+    global[0] = GLOBAL_SIZE;
+    global[1] = GLOBAL_SIZE;
+    local_size[0] = LOCAL_SIZE;
+    local_size[1] = LOCAL_SIZE;
     err = clEnqueueNDRangeKernel(commands, kernel, 2, NULL, &global, NULL, 0, NULL, &event);
     if (err)
     {
         printf("Error: Failed to execute kernel!-%d\n",err);
         return EXIT_FAILURE;
     }
-
     // Wait for the command commands to get serviced before reading back results
     //
     clWaitForEvents(1, &event);
@@ -312,7 +315,7 @@ int main(int argc, char** argv)
 
     // Read back the results from the device to verify the output
     //
-    err = clEnqueueReadBuffer( commands, output, CL_TRUE, 0, sizeof(int) * size * size, results_device, 0, NULL, NULL );  
+    err = clEnqueueReadBuffer( commands, output, CL_TRUE, 0, sizeof(int) * GLOBAL_SIZE * GLOBAL_SIZE, results_device, 0, NULL, NULL );  
     if (err != CL_SUCCESS)
     {
         printf("Error: Failed to read output array! %d\n", err);
@@ -320,37 +323,36 @@ int main(int argc, char** argv)
     }
     // Calculate results sequentially on the host
     int sum, j, k; 
-    for(i = 0; i < size; i++)
+    for(i = 0; i < GLOBAL_SIZE; i++)
     {
-        for(j = 0; j < size; j++)
+        for(j = 0; j < GLOBAL_SIZE; j++)
         {
             sum = 0;
-            for(k = 0; k < size; k++)
-                sum += data1[i*size+k] * data2[k*size+j];
-            results_host[i*size+j] = sum;
-        }
-        
+            for(k = 0; k < GLOBAL_SIZE; k++)
+                sum += data1[i*GLOBAL_SIZE+k] * data2[k*GLOBAL_SIZE+j];
+            results_host[i*GLOBAL_SIZE+j] = sum;
+        }    
     }
     // Validate our results
     //
     correct = 0;
-    printf ("Input1: \n");
-    printMatrix(data1, size );
-    printf ("Input2: \n");
-    printMatrix(data2, size );
-    printf ("Host result: \n");
-    printMatrix(results_host, size );
-    printf ("Device result: \n");
-    printMatrix(results_device, size );
-    for(i = 0; i < (size * size); i++)
+    //printf ("Input1: \n");
+    //printMatrix(data1, GLOBAL_SIZE );
+    //printf ("Input2: \n");
+    //printMatrix(data2, GLOBAL_SIZE );
+    //printf ("Host result: \n");
+    //printMatrix(results_host, GLOBAL_SIZE );
+    //printf ("Device result: \n");
+    //printMatrix(results_device, GLOBAL_SIZE );
+    for(i = 0; i < (GLOBAL_SIZE * GLOBAL_SIZE); i++)
     {
         if(results_device[i] == results_host[i])
             correct++;
     }
     
-    // Print a brief summary detailing the results
+    // Print a brief summary about the results
     //
-    printf("RESULT: Computed '%d/%d' correct values!\n", correct, size * size);
+    printf("RESULT: Computed '%d/%d' correct values!\n", correct, GLOBAL_SIZE * GLOBAL_SIZE);
     
     // Shutdown and cleanup
     //
