@@ -1,2 +1,2 @@
-# shuvam_final_year_project
+# shuvam_opencl_fyp
 Repository for containing codes for my Final Year Project
