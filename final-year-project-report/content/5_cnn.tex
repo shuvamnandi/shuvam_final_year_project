@@ -1,0 +1,62 @@
+\chapter{Convolutional Neural Networks}
+\label{ch5_cnn}
+
+Convolutional Neutral Network (CNN) is a classification of multi-layered neural networks [9]. CNNs are quite similar to regular neural networks – they are composed of neurons possessing learnable weights and biases; neurons get inputs, perform dot products and follow it up with non-linearity (optionally). The network expresses a single differentiable score function: from the raw image pixels on one end to class scores at the other. There is a loss function on the last, fully-connected which generates the final output. The difference exists for the type of input CNN architectures explicitly assume, which are images, allowing certain properties to be encoded into the architecture. These then make the forward function more efficient to implement and hugely decrease the number of parameters in the network [10]. \newline\newline
+CNNs have excellent performance in areas such as image recognition and classification. These are widely used in the detection and identification of faces, objects and animals, apart from powering robot vision and driverless cars [11]. LeNet-5 is a convolutional network designed for handwritten and machine-printed character and digit recognition.
+
+\section{Working}
+\label{sect5_1}
+Hello World
+
+\section{MNIST Database}
+\label{sect5_2}
+The Mixed National Institute of Standards and Technology (MNIST) database is an enormous database of handwritten digits which is frequently utilized for training different image processing procedures [6]. It is also extensively used for training and testing in the field of machine learning. \newline\newline 
+The MNIST database consists of 60,000 training and testing images [7]. Samples from National Institute of Standards and Technology’s (NIST) original training and testing dataset were remixed to generate the MNIST database. The digits have been size-normalized and centered in a fixed-size image of 20x20 while preserving their aspect ratio [8]. The resulting images contain grey levels because of anti-aliasing methods used by the normalization algorithm. The images were centred in a 28x28 image by calculating the centre of mass of the pixels and rendering the image to place this point at the centre of the 28x28 field. \newline\newline
+The database is a good starting point for individuals who desire to learn machine learning techniques and pattern recognition methods on real-world data while spending marginal efforts on preprocessing and formatting. When one learns how to program, there's a tradition to print "Hello World" in his first program. Similar to how programming has Hello World, machine learning has MNIST. \newline\newline
+A number of scientific papers have been written to attempt achieving the lowest error rate in predicting the digits – one paper manages a rate as low as 0.23 percent using a hierarchical system of convolutional neural networks.
+
+\section{Experiments}
+\label{sect5_3}
+The MNIST handwritten digit recognition application was executed on different devices - two CPUs and one GPU, and average timings were calculated for different parts in the execution of kernels. There is a total of eight kernels which execute on the device, launched by the host one by one. The kernels launched have a work dimension of 3 and their global sizes are (12, 12, 20). \newline\newline
+The following results were obtained on an Intel(R) Core(TM) i5-5200U CPU, Intel(R) Xeon(R) CPU E5-1650, and NVIDIA Quadro 600 GPU. \newline
+
+\begin{table}[h!]
+\centering
+ \caption{Execution time (in µs) for different operations in MNIST Application on different devices}
+ \begin{tabular}{ | l | r | r | r |  }
+ \hline
+ \multicolumn{4}{|c|}{MNIST Application Execution Times} \\
+ \hline
+  Device & i5-5200U CPU & E5-1650 CPU& Quadro 600 GPU\\
+ \hline
+ Initialize Application & 0.9 & 1.3 & 1.5 \\
+ Allocate Host Memory & 16.2 & 16.9 & 16.5\\
+ Initialize Device & 62198.5 & 78408.9 & 36985.2 \\
+ Build Kernel & 132807.2 & 130634.2 & 16914.6 \\
+ Allocate Device Memory & 833.2 & 1025.2 & 1364.7 \\
+ Kernel Execution & 99.1 & 394.7 & 3903.5 \\
+ \hline
+ \end{tabular}
+ \label{table:mnist}
+\end{table}
+
+The results above in Table 3 show the time taken on three different processors for initializing the application, allocating memory in the host, initializing the device on which the kernels will execute on, building the kernels, allocating memory on the device, and the execution of all kernels. \newline\newline
+From the results, it is evident that both the CPUs, i5-5200 and Xeon E5-1650 take much lesser time than the NVIDIA Quadro 600 GPU in the kernel execution – their performance is 10.6 and 9.89 times better than the GPU’s. This could be reasoned by making the point that OpenCL parallelizes the code on both the CPUs and GPU, but the execution is not parallel enough to exploit the full usage of the GPU’s performance capabilities. Also, the kernel execution time is for the completion of all the kernels, between which data transfers take up more time as compared to the CPU. The host and the target being CPU and GPU, respectively, increase the communication bottleneck drastically and leads directly to having a greater execution time for the GPU. In case of the CPUs, the communication requires hardly any time, leading to a smaller execution time. \newline\newline
+To further understand this, the timings for the completion of individual kernels were measured. It was shown that the CPUs were only 2 times faster than the GPU on an average, as compared to 10 times for the aggregated execution time for the eight kernels. These experiments conclude that the GPU execution is much faster if the communication bottleneck can be avoided. \newline\newline
+
+
+
+%Researchers have proposed fine 
+%\cite{brant_zuma:_2012}, 
+%\cite{hubner_heterogeneous_2011} 
+%and coarse grained 
+%\cite{plessl_zippy_2005}, 
+%\cite{bergmann_quku:_2013},
+%\cite{coole_intermediate_2010},
+%\cite{capalija_high-performance_2013},
+%\cite{liu_soft_2013}, 
+%\cite{heyse_efficient_2013}                  
+%overlay architectures to abstract FPGA fabric resources.
+
+%\input{figures_tex/overlay}
+
