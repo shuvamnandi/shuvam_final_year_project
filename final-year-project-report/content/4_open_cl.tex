@@ -1,12 +1,12 @@
 \chapter{The OpenCL Programming Model}
 \label{ch4_opencl}
 
-OpenCL is a framework for writing application programs that run across heterogeneous platforms, comprising GPUs, CPUs, DSPs, FPGAs, and other processors or hardware accelerators [1]. A framework suited for parallel programming, it has been standardized by the Khronos group, made up of companies like AMD, Apple, Intel, NVIDIA, Qualcomm, Sony, Xilinx, etc. [2].
+OpenCL is a framework for writing application programs that run across heterogeneous platforms, comprising \ac{GPU}s, \ac{CPU}s, \ac{DSP}s, \ac{FPGA}s, and other processors or hardware accelerators\cite{opencl_wiki}. A framework suited for parallel programming, it has been standardized by the Khronos group, made up of companies like AMD, Apple, Intel, NVIDIA, Qualcomm, Sony, Xilinx, etc. \cite{opencl_fixstars}.
 
 \section{Introduction}
 
-OpenCL is truly the first open programming standard for general-purpose computations on heterogeneous systems, allowing programmers to target their source code on multi-core CPUs, GPUs, and other devices. It specifies a programming language (centered on the C99 standard) for programming these devices and provides APIs, to control the platform and execute programs on various computing devices. OpenCL is vendor independent and thus not specialized for any device . Therefore, OpenCL is a powerful way to write parallel programs capable of running on a wide range of devices. \newline\newline
-The framework includes a language, API, libraries and a runtime system to support software development. The architecture of OpenCL can be described using a hierarchy of models [3]:
+OpenCL is truly the first open programming standard for general-purpose computations on heterogeneous systems, allowing programmers to target their source code on multi-core CPUs, GPUs, and other devices. It specifies a programming language (centered on the C99 standard) for programming these devices and provides \ac{API}s, to control the platform and execute programs on various computing devices. OpenCL is vendor independent and thus not specialized for any device. Therefore, OpenCL is a powerful way to write parallel programs capable of running on a wide range of devices. \newline\newline
+The framework includes a language, API, libraries and a runtime system to support software development. The architecture of OpenCL can be described using a hierarchy of models \cite{opencl_ajg}:
 
 \begin{itemize}
 \item Platform Model
@@ -16,11 +16,11 @@ The framework includes a language, API, libraries and a runtime system to suppor
 \end{itemize}
 
 \subsection{Platform Model}
-In this model, a host device is connected to one or more OpenCL devices, which is divided into one or more compute units (CUs), further divided into one or more processing elements (PEs). All computations on a device are executed on the PEs [4].
+In this model, a host device is connected to one or more OpenCL devices, which is divided into one or more compute units (CUs), further divided into one or more processing elements (PEs). All computations on a device are executed on the PEs \cite{opencl_khronos}.
 
 \begin{figure}[h!]
   \includegraphics[width=\linewidth]{figures/OpenCL_Platform_Model.JPG}
-  \caption{Platform Model in OpenCL [3]}
+  \caption{Platform Model in OpenCL}
   \label{fig:opencl1}
 \end{figure}
 The host device holds the OpenCL application running, from where the commands are submitted to the device, to be executed on the PEs within. The PEs inside a CU execute a single set of instructions as Single Instruction Multiple Data (SIMD) units in parallel. 
@@ -49,7 +49,7 @@ Private memory belongs to a sole processing element. Each processing element has
 Global memory is the only memory which is persistent between kernel calls. Constant, local, and private memories are just scratch spaces, which get reset after every kernel call.
 
  \subsection{Execution Model}
-The core of the OpenCl execution model is based on how kernels execute on the device. The execution of an OpenCL program happens in two parts: kernels that execute on the OpenCL devices, and a host that runs on the host device. The host is responsible for executing kernel functions on the device [4]. These are ordinary functions, albeit with special signatures. The kernel call comprises two parts: an ordinary argument list, and external execution parameters that control the parallelism. OpenCL provides direct support for parallel computing. \newline\newline
+The core of the OpenCl execution model is based on how kernels execute on the device. The execution of an OpenCL program happens in two parts: kernels that execute on the OpenCL devices, and a host that runs on the host device. The host is responsible for executing kernel functions on the device \cite{opencl_khronos}. These are ordinary functions, albeit with special signatures. The kernel call comprises two parts: an ordinary argument list, and external execution parameters that control the parallelism. OpenCL provides direct support for parallel computing. \newline\newline
 \begin{figure}[h!]
 \includegraphics[width=\linewidth]{figures/C_and_OpenCL_Function_Calls.png}
 \caption{C and OpenCL Function Calls [3]}
@@ -60,7 +60,7 @@ The host coordinates the execution of the kernels on the OpenCL device. It does 
 The kernel function will be invoked many times, the argument list being identical for all the invocations. This means that the same function gets called repeatedly, based on the execution parameters specified by the host prior to launching the kernel.\newline\newline
 There exists an index space provided by an N-dimensional index space. The index space supported in OpenCL is called an NDRange. It can be one, two or three dimensional. Each function invocation can access its index; this is how it is identified. A work-item is a kernel invocation for a particular index, and the global id is a unique identity for every work-item belonging to the index space. Every work-item is provided with a global ID. The global work size is the number of work-items in every dimension. The work dimension is the dimension of the index space.\newline\newline 
 From the Device Model, the processing elements are the ones which execute the instructions. To be able to execute the kernel multiple times on the device, the work-item needs to be mapped to Processing Elements (PEs). Multiple work-items are assigned to each PE, so that the case where number of PEs is less than the global work size can be taken care of. \newline\newline
-Now, every Compute Unit (CU) has a dedicated local memory which is shared by all PEs within. Local memory provides huge advantages in performance. Thus, work-items must be mapped to the PEs in such a way that a group of them can access the local memory of a CU for effective execution. The partitioning of the global work size into smaller pieces leads to the formation of work-groups. The work-groups provide a more coarse-grained decomposition of the index space. Work-groups are assigned a unique work-group ID with the same dimension as the index space used for the work-items. Work-items are assigned a unique local ID within a work-group so that a single work-item can be uniquely identified by its global ID or by a combination of its local ID and work-group ID [4]. \newline\newline
+Now, every Compute Unit (CU) has a dedicated local memory which is shared by all PEs within. Local memory provides huge advantages in performance. Thus, work-items must be mapped to the PEs in such a way that a group of them can access the local memory of a CU for effective execution. The partitioning of the global work size into smaller pieces leads to the formation of work-groups. The work-groups provide a more coarse-grained decomposition of the index space. Work-groups are assigned a unique work-group ID with the same dimension as the index space used for the work-items. Work-items are assigned a unique local ID within a work-group so that a single work-item can be uniquely identified by its global ID or by a combination of its local ID and work-group ID \cite{opencl_khronos}. \newline\newline
 Work-groups execute on CUs and share their local memory. All the work-items in the work-group share local memory and are mapped to PEs within a CU. These work-items are capable of identifying which work group they are parts of, work-group ID, size of work-groups, their global IDs and the global work size. \newline\newline 
 The work-group size has a device specific physical meaning. The maximum work-group size is a device characteristic. This can be determined by querying the device. Also, it is an integer value; thus, n-dimensional work-groups have to be handled in a special way. Work-groups are launched by the host device. \newline\newline
 The device particular work-group size is a scalar, but work-groups can have multiple dimensions. For example, if the maximum work group size is 32, work-groups could be launched in 3 dimensions like (8, 2, 2). The following must be true in order to launch the work-groups successfully: 

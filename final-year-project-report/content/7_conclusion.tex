@@ -4,37 +4,6 @@ This chapter concludes and summarizes this report.
 Furthermore, in this chapter we discuss future research directions in detail.
 
 \section{Conclusions}
-This report discussed the placement and routing of high level description of application (in data-flow graph format) on coarse-grained FPGA overlays. 
-
-Course-grained FPGA overlays offer many-fold advantages such as software-like programmability through mapping from high level descriptions, portability, reuse and fast compilation. 
-Faster compilation and rapid reconfiguration due to smaller configuration data size lead to significantly improved design productivity and efficiency. 
-It helps reduce a complex problem that must be solved with vendor implementation tools into a simpler one of placing functions on an array of processing elements and routing data.
-
-The algorithms used in Versatile Placement and Routing (VPR) tool were first discussed.
-This work included developing an understanding of the placement and routing algorithm. 
-We developed an understanding of the underlying FPGA architecture as well as the various stages in the design process where placement and routing plays an important role. 
-We then develop python implementation of placement and routing algorithms.
-We plan to release it publicly for others to use in research community.
-%The Simulated Annealing Algorithm which is used in VPR placement and its working was analysed. 
-%The nodes of the netlist are placed on the FPGA fabric in order to minimize the value of the cost function. 
-
 
 \section{Future work}
-
-The future work in this project mainly involves adapting the algorithms for different interconnect architecture since the current implementation only supports island-style architectures. 
-As a next step, we aim to work on scalability analysis and runtime optimization of our implemenation. 
-Long term goal is to build a Python-based tool-chain to implement novel placement and routing algorithms which would make it easier to further extend our research to alternative architectures.
-
-%Also, the algorithms used in VPR can handle placement and routing for island-style architectures. 
-%In the future, we aim to extend it for other architectures, specifically nearest neighbor (NN) interconnect based architectures.
-
-%\begin{itemize}\itemsep1pt \parskip0pt
-%	\item \textbf{Analysis of the Routing Algorithms in VPR}: Routing is an important part of the PAR process. The Pathfinder Algorithm used by VPR will be analysed along with its cost function to understand how the optimum routing can be achieved using available resources and given parameters.	
-%	\item \textbf{Python Implement of PAR}:  The placement and routing algorithms of VPR will be implemented in Python. Python provides a rich resource of libraries which would make the code base much smaller thus resulting in easier extension of VPR to solve problems for other architectures.	
-%	\item \textbf{Optimization and Extension to Nearest Neighbour Architecture}: In the next part, we aim to work on scability analysis and runtime optimization of our implemenation. Also, the algorithms used in VPR can handle placement and routing for island-style architectures. In the future, we aim to extend it for other architectures, specifically nearest neighbor (NN) interconnect based architectures.
-%\end{itemize}
-
-
-
- 
 

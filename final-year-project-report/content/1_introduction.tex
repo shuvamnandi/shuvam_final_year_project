@@ -2,27 +2,9 @@
 \label{ch1_introduction}
 \section{Motivation}
 Silicon technology will continue to provide an exponential increase in the availability of raw transistors. 
-Effectively translating this resource into application performance, however, is an open challenge that conventional processor designs will not be able to meet. 
-On the other hand, Field Programmable Gate Array (FPGA) devices provide a sea of high performance computing blocks for implementing kernels as high performance fully parallel and pipelined designs.
-For more than a decade, researchers have shown that FPGAs can accelerate a wide variety of software, in some cases by several orders of magnitude compared to state-of-the-art general purpose processors.
-The most fundamental difference is that general-purpose processors provide functionality to execute a list of instructions sequentially, whereas FPGA architectures can implement compute kernels by mapping compute operations on configurable blocks.
 
-While the performance benefits of FPGAs over processor based systems have been well established~\cite{compton_reconfig_2002,tessier2015reconfigurable,dehon2015fundamental,trimberger2015three}, such platforms have not seen wide use beyond specialist application domains such as digital signal processing and communications.
-Poor design productivity has been a key limiting factor, restricting their effective use to experts in hardware design~\cite{stitt2011field}. 
-Even as \ac{HLS} tools improve in efficiency~\cite{canis_legup:_2011,liang_high-level_2012}, prohibitive compilation time (specifically place and route time) still limits productivity and mainstream adoption of reconfigurable platforms.
+Shuvam Nandi
 
-Despite numerous efforts in reducing reconfiguration times and improving CAD tool support for dynamic reconfiguration of FPGA fabric~\cite{vipin2012,vipin_high_2012,vipin2013,vipin_automated_2014,vipin_zycap_2014}, It still prevents designers from using FPGA as a rapidly reconfigurable hardware accelerator.
-Thus, the requirement to rapidly change the hardware fabric, that is to perform a hardware context switch, has led to the development of coarse grained overlay architectures which allow for fast compilation and software like
-programmability.
-
-
-Coarse-grained FPGA overlay architectures~\cite{plessl_zippy_2005,bergmann_quku:_2013,coole_intermediate_2010,capalija_high-performance_2013,govindaraju2012dyser,fccm2015-jain,heart2015-jain,liu_soft_2013,cong2014fully} have been shown to be effective when paired with general purpose processors, offering software-like programmability, fast compilation, application portability and improved design productivity.
-These architectures enable general purpose hardware accelerators, allowing hardware design at a higher level of abstraction.
-In our work, we aim to develop a placement and routing (PAR) tool for coarse grained island-style overlays.
-%Eventually we aim to adapt the algorithms to support different interconnect architectures.
-
-
-\section{Contribution}
 
 
 \section{Organization}
