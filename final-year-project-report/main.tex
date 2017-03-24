@@ -47,6 +47,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage{color}
+\usepackage{diagbox}
+\usepackage[thinlines]{easytable}
 
 \def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;} 
 \def\scalecheck{\resizebox{\widthof{\checkmark}*\ratio{\widthof{x}}{\widthof{\normalsize x}}}{!}{\checkmark}}
@@ -114,6 +116,12 @@
   long  = Instruction Set Architecture ,
   class = abbrev
 }
+
+\DeclareAcronym{MLP}{
+	short = MLP ,
+	long  = Multi Layer Perceptron ,
+	class = abbrev
+}
 \DeclareAcronym{MNIST}{
 	short = MNIST ,
 	long  = Mixed National Institute of Standards and Technology ,
@@ -125,14 +133,7 @@
   class = abbrev
 }
 
-\definecolor{lightgray}{rgb}{0.95, 0.95, 0.95}
-\definecolor{darkgray}{rgb}{0.4, 0.4, 0.4}
-\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
-\definecolor{ocherCode}{rgb}{1, 0.5, 0} % #FF7F00 -> rgb(239, 169, 0)
-\definecolor{blueCode}{rgb}{0, 0, 0.93} % #0000EE -> rgb(0, 0, 238)
-\definecolor{greenCode}{rgb}{0, 0.6, 0} % #009900 -> rgb(0, 153, 0) 
 \usepackage{upquote}
-\usepackage{listings}
 \makeatletter
 
 \usepackage{booktabs}
@@ -164,13 +165,6 @@
 \renewcommand{\dblfloatpagefraction}{0.7}	% requires fuller float pages
 %remember to use [htp] or [htpb] for placement
 
-\newenvironment{packed_enum}{
-\begin{enumerate}
-  \setlength{\itemsep}{1pt}
-  \setlength{\parskip}{0pt}
-  \setlength{\parsep}{0pt}
-}{\end{enumerate}}
-
 
 \begin{document}
 
@@ -182,9 +176,9 @@
 \listoffigures
 \listoftables
 
-\pagenumbering{arabic}
-%\onehalfspacing
+\onehalfspacing
 \input{content/1_introduction}
+\pagenumbering{arabic}
 \input{content/2_background}
 \input{content/3_literature_review}
 \input{content/4_open_cl}

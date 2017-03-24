@@ -6,23 +6,23 @@
  
 The performance derived from a computer and the amount of energy that is consumed in the process hugely depends on algorithms, application code, compiler, microarchitecture, Instruction Set Architecture (ISA), physical design, circuit design and fabrication process. This is the order of abstraction from a user working on the computer, starting from the top most layer exposed to programmer, down to the bottom most layer which depends on how the chip is fabricated. \newline\newline
 The Central Processing Unit (CPU) is one of the most significant parts of any computing device, as it is the brain of the computer \cite{riscv_xda}. It performs arithmetic and logical operations and moves data from one place to another. This is done by the processor according to ISA it is based on. An ISA is a well-defined interface linking computer software to the hardware its running on, enabling the independent development of the two computing realms. It is strictly an interface specification, not an implementation. \newline\newline
-In today’s age, technology has been able to evolve much more because of the existence of open standards and open source software – Linux as an open source operating system for example. This builds the case for an ISA which is not proprietary and is powerful enough to drive custom processing chips. \newline\newline
+In today's age, technology has been able to evolve much more because of the existence of open standards and open source software – Linux as an open source operating system for example. This builds the case for an ISA which is not proprietary and is powerful enough to drive custom processing chips. \newline\newline
 Historically, ISAs have been proprietary for business reasons, but there is no good technical reason for the absence or deficiency of open source ISAs. Having a free and open source ISA specification would hugely benefit the industry, just like how open source software has added great value. It would directly lead to a rise in innovation via free-market competition, with several designers coming with various implementations, which comprise both the open source and proprietary ISA versions. More shared open core designs would exist, reducing the time taken to hit the market, lowering cost from reuse, and making the designs more transparent and error-free. Moreover, an open ISA would lead to processors becoming affordable for a greater number of devices, helping in expanding the Internet of Things (IoTs) \cite{riscv_isa_free}.
 
 \subsection{About}
  \label{sect6_1_1}
-RISC-V is an ISA originally designed to support computer architecture research and education, now reaching the stage to become a standard open architecture for industry implementations, under the governance of the RISC-V foundation. It was developed in the Computer Science Division of the EECS department at University of California, Berkeley \cite{riscv_home}. Its development was inspired by ARM’s IP restrictions together with the lack of 64-bit addresses. \newline\newline
+RISC-V is an ISA originally designed to support computer architecture research and education, now reaching the stage to become a standard open architecture for industry implementations, under the governance of the RISC-V foundation. It was developed in the Computer Science Division of the EECS department at University of California, Berkeley \cite{riscv_home}. Its development was inspired by ARM's IP restrictions together with the lack of 64-bit addresses. \newline\newline
 RISC-V has learned from various mistakes in different ISAs, making its design superior to other ISAs incorporating a better mix of capabilities \cite{riscv_isa_free}. It provides a small core instruction set that compilers and operating systems can depend on, as well as optional standard extensions. It has a compact instruction set encoding – smaller code is desirable as it reduces the memory requirement. It offers single, double and quadruple precision floating point capabilities, in addition to being 32, 64 and 128-bit addressable. \newline\newline
 RISC-V was defined with a goal to be completely open and freely open to academic researchers and industries. Designed with small, fast and low-power real-word implementations in mind, it does not over-architect for a particular style of microarchitecture. It is a real ISA suited for direct native hardware implementation, not for just simulation or binary translation. It provides support for the revised 2008 IEEE-754 floating-point standard \cite{ieee_754}. RISC-V simplifies experiments with new supervisor-level and hypervisor-level ISA designs. \newline\newline
-RISC-V’s capabilities make it extremely powerful, yet simple and clean to implement. In contrast to most ISAs, it is available for all types for use, empowering anyone to design, manufacture and sell RISC-V chips and software. It supports small embedded systems, Personal Computers (PCs), supercomputers with vector processors, and warehouse-scale rack mounted parallel computers. Thus, the widespread usage of RISC-V would allow software developers to target an open hardware target, while making commercial processor designers compete on implementation superiority. 
+RISC-V's capabilities make it extremely powerful, yet simple and clean to implement. In contrast to most ISAs, it is available for all types for use, empowering anyone to design, manufacture and sell RISC-V chips and software. It supports small embedded systems, Personal Computers (PCs), supercomputers with vector processors, and warehouse-scale rack mounted parallel computers. Thus, the widespread usage of RISC-V would allow software developers to target an open hardware target, while making commercial processor designers compete on implementation superiority. 
 
 \subsection{ISA Specifications}
  \label{sect6_1_2}
-RISC-V is specified as a base integer ISA, which is a must in any implementation, with additional extensions to the base ISA. Based on the width of the integer registers, the base instruction set has two variants, RV32I and RV64I. There is scope for a future variant RV128I for 128-bit address support \cite{riscv_isa_manual}. It provides support for extensive customization and specialization, along with extension beyond the base instruction set, but doesn’t allow redefining these base integer instructions. \newline\newline
+RISC-V is specified as a base integer ISA, which is a must in any implementation, with additional extensions to the base ISA. Based on the width of the integer registers, the base instruction set has two variants, RV32I and RV64I. There is scope for a future variant RV128I for 128-bit address support \cite{riscv_isa_manual}. It provides support for extensive customization and specialization, along with extension beyond the base instruction set, but doesn't allow redefining these base integer instructions. \newline\newline
 There are four core instruction formats defined in the base instruction set, as shown follows:
 \begin{figure}[h!]
 \includegraphics[width=\linewidth]{figures/RISCV_Instruction_Formats.jpg}
-\caption{Base instruction formats in RISC-V}
+\caption{Base instruction formats in RISC-V \cite{riscv_tools_bootcamp}}
 \label{fig:riscv1}
 \end{figure}
 
@@ -38,7 +38,7 @@ There also exists a reduced version of the base integer instruction set (RV32I),
 Several software tools and libraries are required to be downloaded and setup before any development on RISC-V can begin. These comprise the riscv-tools infrastructure and are available on GitHub. It is a meta-repository with Git submodules containing every stable component of the RISC-V software toolchain \cite{riscv_tools_bootcamp}. The image below shows the software stack of riscv-tools: \newline\newline
 \begin{figure}[h!]
 \includegraphics[width=\linewidth]{figures/RISC-V_Software_Stack.png}
-\caption{Software stack for RISC-V tools}
+\caption{Software stack for RISC-V tools \cite{riscv_tools_bootcamp}}
 \label{fig:riscv2}
 \end{figure}
 
@@ -88,7 +88,7 @@ The use case for following this workflow is Simple POSIX environment.
 \end{itemize}
 \end{itemize}
 In this case, the former workflow was followed, the aim being familiarization with the RISC-V development phase. The selected workflow was easier to set up and took lesser time. This requires the components riscv-gnu-toolchain, riscv-fesvr, riscv-isa-sim, and riscv-pk. \newline\newline
-The binaries generated against newlib system library will not be running on a full-blown operating system, but will require access to few crucial system calls \cite{riscv_soft_tools}. The setup will thus require the installation of riscv-newlib. Newlib is a C library intended for embedded systems. It has the edge of not being unnecessarily complicated over Glibc, as well as having sufficient support. Also, its porting process is much simpler than that of Glibc because it only requires a few stubs of glue code. These stubs of code include the system calls that are supposed to call into the operating system you’re running on.
+The binaries generated against newlib system library will not be running on a full-blown operating system, but will require access to few crucial system calls \cite{riscv_soft_tools}. The setup will thus require the installation of riscv-newlib. Newlib is a C library intended for embedded systems. It has the edge of not being unnecessarily complicated over Glibc, as well as having sufficient support. Also, its porting process is much simpler than that of Glibc because it only requires a few stubs of glue code. These stubs of code include the system calls that are supposed to call into the operating system you're running on.
 
 \subsubsection{Toolchain}
 \label{sect6_2_2_1}
@@ -257,18 +257,38 @@ After the installation of all tools required for using PicoRV32 was completed, t
 \includegraphics[width=\linewidth]{figures/PicoRV32_Execution.png}
 \caption{Successful execution of PicRV32 testbench}
 \label{fig:riscv4}
-
 \end{figure}
 
-This demonstrates that the installation was done successfully. The output is produced by different C files which are executed on the PicoRV32 CPU. The functions written in the C files are called in an assembly file \textit{start.S}, located in \verb|picorv32/firmware| directory. Along with C function calls, the assembly file also contains various tests in assembly files which get executed upon running make command. \newline\newline
-Upon further analysis of the compilation and execution flow, it was observed that the Icarus Verilog compiler compiles the \textit{testbench.v} and \textit{picorv32.v} files and generates an intermediate \verb|vvp| assembly file, \textit{testbench.vvp}. This is followed by the compilation of the \textit{start.S} assembly file, the C codes and test assembly files the into their binaries using the \verb|riscv32-unknown-elf-gcc| command. This is succeeded by the generation of an executable file \textit{firmware.elf}, which is translated into a \textit{firmware.bin} file by \verb|riscv32-unknown-elf-objcopy| utility. In order to run the machine code on the processor, a script makehex.py in the firmware directory was used to convert the \textit{firmware.elf} file into \textit{firmware.hex} file. The \textit{firmware.hex} file contains instructions as defined by the RISC-V specification in the 32-bit format (represented as 8 digit hexadecimal numbers), which are passed to PicoRV32. The \verb|vvp| command of Icarus Verilog runs the previously generated \textit{testbench.vvp} file and executes the machine code on PicoRV32. \newline\newline
-Observing the testbench output provided deep insights into how the execution maps from the high-level language C code to the low-level machine code. To understand how the processor executes these instructions, the Verilog file \textit{picorv32.v} was studied and understood. The instructions are loaded from the firmware.hex file in the testbench, which is stored in a 1024-bit wide register. \newline\newline
-The above code snippet shows the loading of the instructions into a 32-bit wide, 16384 lines long memory in an \verb|axi4_memory| instance. The instance is declared as follows: \newline\newline
-This memory is the source of instructions for the processor, which lacks a default instruction memory. As mentioned in 5.3.1, PicoRV32 is available in two variants. In this case, the \verb|axi4_memory| is interfaced to the \verb|picorv32_axi| version of PicoRV32 core, using the \verb|picorv32_axi_adapter|.
+This demonstrates that the installation was done successfully. The output is produced by different C files which are executed on the PicoRV32 CPU. The functions written in the C files are called in an assembly file \textit{start.S}, located in \verb|picorv32/firmware| directory. Along with C function calls, the assembly file also contains various tests in assembly files which get executed upon running make command. \newline
+\begin{figure}[h!]
+\centering
+\includegraphics[height=15cm]{figures/PicoRV32_Compilation_Flow.png}
+\caption{Compilation flow before execution on PicRV32}
+\label{fig:riscv5}
+\end{figure}
+
+Upon further analysis of the compilation and execution flow, it was observed that the Icarus Verilog compiler compiles the \textit{testbench.v} and \textit{picorv32.v} files and generates an intermediate \verb|vvp| assembly file, \textit{testbench.vvp}. This is followed by the compilation of the \textit{start.S} assembly file, the C codes and test assembly files the into their binaries using the \verb|riscv32-unknown-el-| \\ \verb|f-gcc| command. This is succeeded by the generation of an executable file \textit{firmware.elf}, which is translated into a \textit{firmware.bin} file by \verb|riscv32-unknown-| \\ \verb|elf-objcopy| utility. In order to run the machine code on the processor, a script makehex.py in the firmware directory was used to convert the \textit{firmware.elf} file into \textit{firmware.hex} file. The \textit{firmware.hex} file contains instructions as defined by the RISC-V specification in the 32-bit format (represented as 8 digit hexadecimal numbers), which are passed to PicoRV32. The \verb|vvp| command of Icarus Verilog runs the previously generated \textit{testbench.vvp} file and executes the machine code on PicoRV32. The whole flow is shown as an activity diagram in Figure \ref{fig:riscv5}.\newline\newline
+Observing the testbench output provided deep insights into how the execution maps from the high-level language C code to the low-level machine code. To understand how the processor executes these instructions, the Verilog file \textit{picorv32.v} was studied and understood. The instructions are loaded from the firmware.hex file in the testbench, which is stored in a 1024-bit wide register.\newline
+\begin{lstlisting}[language=Verilog]
+reg [1023:0] firmware_file;
+initial begin
+end
+if(!$value$plusargs("firmware=%s", firmware_file))
+       firmware_file = "firmware/firmware.hex";
+$readmemh(firmware_file, mem.memory);
+\end{lstlisting}
+The above code snippet shows the loading of the instructions into a 32-bit wide, 16384 lines long memory in an \verb|axi4_memory| instance. The instance is declared as follows:\newline
+\begin{lstlisting}[language=Verilog]
+reg [31:0]   memory [0:64*1024/4-1];
+\end{lstlisting}
+This memory is the source of instructions for the processor, which lacks a default instruction memory. As mentioned in 5.3.1, PicoRV32 is available in two variants. In this case, the \verb|axi4_memory| is interfaced to the \verb|picorv32_axi| version of PicoRV32 core, using the \verb|picorv32_axi_adapter|. \newline\newline
+Along with being the instruction source, this \verb|axi4_memory| memory instance acts as the data memory as well. This implies that PicoRV32 follows a \textbf{von Neumann} architecture with a unified memory for storing data and instructions. The assembly file \textit{start.S} is used to allocate specific parts of the memory instance to be used as data memory. This brings complexity in the form of management of different sections of the same memory for instruction and data storage purposes.
+
+
 
  \section{Implementation of RISC-V Processor}
  \label{sect6_4}
-After understanding the working of PicoRV32 from a high-level perspective, the next step is to design and implement a small processor based on the RISC-V 32-bit base integer instruction set. PicoRV32 has several features, like custom instructions for IRQ handling, which make the processor complicated, heavier and relatively slower. 
+After understanding the working of PicoRV32 from a high-level perspective, the next step is to design and implement a small processor based on the RISC-V 32-bit base integer instruction set. PicoRV32 has several features, like custom instructions for IRQ handling, a unified memory for data and instructions, which make the processor complicated and heavier.\newline\newline
 On an average, PicoRV32 was observed to have a Cycles Per Instruction (CPI) value of 4.8. The execution of some specific instructions increased the CPI. 
 
 \subsection{Objective}
@@ -295,14 +315,14 @@ The processor would be built using the required components as stated above in \r
 
 \begin{enumerate}
 \item \textbf{Control Unit} \newline
-The Control Unit determines the execution of operations on the processor. It instructs the processor’s components like memory, ALU and input and output devices to respond to the program instructions. It can be perceived as the brain inside the CPU, making it the brain inside the brain of the computer. \newline\newline
+The Control Unit determines the execution of operations on the processor. It instructs the processor's components like memory, ALU and input and output devices to respond to the program instructions. It can be perceived as the brain inside the CPU, making it the brain inside the brain of the computer. \newline\newline
 It consists of two registers, namely the Program Counter (PC) register and the Instruction Register (IR). PC points to the address of the instruction to be executed, while IR contains the instruction being currently interpreted. Instructions are fetched from the instruction memory and decoded in the Control Unit. The data required for the instruction to execute is extracted from the registers or data memory, and passed on to the ALU to perform the operation specified by the instruction opcode. \newline\newline
 The design of the control unit needs to be done according to RISC-V instruction specifications. As seen in Figure \ref{fig:riscv5}, the instruction contains additional information about the instruction in bits func7 and func3 which distinguish several instructions; opcodes can be the same for various instructions, as shown below.
 
 \begin{figure}[h!]
 \includegraphics[width=\linewidth]{figures/RISCV_Instruction_Formats.jpg}
-\caption{Formats for RISC-V instructions to be implemented}
-\label{fig:riscv5}
+\caption{Formats for RISC-V instructions to be implemented \cite{riscv_isa_manual}}
+\label{fig:riscv6}
 \end{figure}
 
 \item \textbf{Registers} \newline
@@ -318,7 +338,7 @@ The Arithmetic and Logic Unit of a CPU performs arithmetic and logical operation
 \centering
 \includegraphics[width=8.5cm]{figures/ALU_block.PNG}
 \caption{Symbolic representation of an ALU}
-\label{fig:riscv6}
+\label{fig:riscv7}
 \end{figure}
 
 \end{enumerate}

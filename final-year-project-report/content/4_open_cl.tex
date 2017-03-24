@@ -1,7 +1,7 @@
 \chapter{The OpenCL Programming Model}
 \label{ch4_opencl}
 
-OpenCL is a framework for writing application programs that run across heterogeneous platforms, comprising \ac{GPU}s, \ac{CPU}s, \ac{DSP}s, \ac{FPGA}s, and other processors or hardware accelerators\cite{opencl_wiki}. A framework suited for parallel programming, it has been standardized by the Khronos group, made up of companies like AMD, Apple, Intel, NVIDIA, Qualcomm, Sony, Xilinx, etc. \cite{opencl_fixstars}.
+OpenCL is a framework for writing application programs that run across heterogeneous platforms, comprising \ac{GPU}, \ac{CPU}, \ac{DSP}, \ac{FPGA}, and other processors or hardware accelerators \cite{opencl_wiki}. A framework suited for parallel programming, it has been standardized by the Khronos group, made up of companies like AMD, Apple, Intel, NVIDIA, Qualcomm, Sony, Xilinx, etc.\cite{opencl_fixstars}.
 
 \section{Introduction}
 
@@ -28,49 +28,49 @@ The host device holds the OpenCL application running, from where the commands ar
 \subsection{Memory Model}
 Memory directly available to kernels executing on OpenCL devices is known as device memory. The device memory consists of the four distinct memory regions as follows: 
 \begin{itemize}
-\item \textbf{Global Memory}: This memory region allows read/write access to each work-item in all the work-groups executing on any device inside a context. Work-items are capable of reading from or writing to any part of memory objects. Accesses to global memory may be cached, depending on the device capabilities. \newline\newline
+\item \textbf{Global Memory}: This memory region allows read/write access to each work item in all the work groups executing on any device inside a context. Work items are capable of reading from or writing to any part of memory objects. Accesses to global memory may be cached, depending on the device capabilities. \newline\newline
 Global memory is shared with all processing elements, and is also available to the host. The host utilises this memory to copy data to/from the device.
 
 \item \textbf{Constant Memory}: This memory region contains content that remains constant throughout the execution of a kernel. \newline\newline
 Constant memory is also shared between all processing elements, but it is read-only. It provides an efficient way to share data with all processing elements.
 
-\item \textbf{Local Memory}: A region of memory local to a work-group. This region can be used to allot variables that are common to all work-items within the work-group.\newline\newline
+\item \textbf{Local Memory}: A region of memory local to a work group. This region can be used to allot variables that are common to all work items within the work group.\newline\newline
 Each CU has its own local memory, only shared with the processing elements within the compute unit. It cannot be accessed by other compute units. 
 
-\item \textbf{Private Memory}: A region of memory private to a work-item. Variables declared in one work-item’s private memory are not seen to another work-item.\newline\newline
-Private memory belongs to a sole processing element. Each processing element has its own private memory, thereby unable to access all other private memories within or outside the CU.
+\item \textbf{Private Memory}: A region of memory private to a work item. Variables declared in one work item’s private memory are not visible to another work item.\newline\newline
+Private memory belongs to a single processing element. Each processing element has its own private memory, thereby unable to access all other private memories within or outside the CU.
 
 \begin{figure}[h!]
   \includegraphics[width=\linewidth]{figures/OpenCL_Memory_Model.jpg}
-  \caption{Memory Model in OpenCL [3]}
+  \caption{Memory Model in OpenCL \cite{opencl_ajg}}
   \label{fig:opencl2}
 \end{figure}
 \end{itemize}
 Global memory is the only memory which is persistent between kernel calls. Constant, local, and private memories are just scratch spaces, which get reset after every kernel call.
 
  \subsection{Execution Model}
-The core of the OpenCl execution model is based on how kernels execute on the device. The execution of an OpenCL program happens in two parts: kernels that execute on the OpenCL devices, and a host that runs on the host device. The host is responsible for executing kernel functions on the device \cite{opencl_khronos}. These are ordinary functions, albeit with special signatures. The kernel call comprises two parts: an ordinary argument list, and external execution parameters that control the parallelism. OpenCL provides direct support for parallel computing. \newline\newline
+The core of the OpenCL execution model is based on how kernels execute on the device. The execution of an OpenCL program happens in two parts: kernels that execute on the OpenCL devices, and a host that runs on the host device. The host is responsible for executing kernel functions on the device \cite{opencl_khronos}. These are ordinary functions, albeit with special signatures. The kernel call comprises two parts: an ordinary argument list, and external execution parameters that control the parallelism. OpenCL provides direct support for parallel computing. \newline\newline
 \begin{figure}[h!]
 \includegraphics[width=\linewidth]{figures/C_and_OpenCL_Function_Calls.png}
-\caption{C and OpenCL Function Calls [3]}
+\caption{C and OpenCL Function Calls \cite{opencl_ajg}}
 \label{fig:opencl3}
 \end{figure}
 The host coordinates the execution of the kernels on the OpenCL device. It does not get involved in the computations itself; it only provides execution parameters to launch the kernel and the arguments which the kernel requires for carrying out the operations. 
 \subsubsection{Execution Strategy}
 The kernel function will be invoked many times, the argument list being identical for all the invocations. This means that the same function gets called repeatedly, based on the execution parameters specified by the host prior to launching the kernel.\newline\newline
-There exists an index space provided by an N-dimensional index space. The index space supported in OpenCL is called an NDRange. It can be one, two or three dimensional. Each function invocation can access its index; this is how it is identified. A work-item is a kernel invocation for a particular index, and the global id is a unique identity for every work-item belonging to the index space. Every work-item is provided with a global ID. The global work size is the number of work-items in every dimension. The work dimension is the dimension of the index space.\newline\newline 
-From the Device Model, the processing elements are the ones which execute the instructions. To be able to execute the kernel multiple times on the device, the work-item needs to be mapped to Processing Elements (PEs). Multiple work-items are assigned to each PE, so that the case where number of PEs is less than the global work size can be taken care of. \newline\newline
-Now, every Compute Unit (CU) has a dedicated local memory which is shared by all PEs within. Local memory provides huge advantages in performance. Thus, work-items must be mapped to the PEs in such a way that a group of them can access the local memory of a CU for effective execution. The partitioning of the global work size into smaller pieces leads to the formation of work-groups. The work-groups provide a more coarse-grained decomposition of the index space. Work-groups are assigned a unique work-group ID with the same dimension as the index space used for the work-items. Work-items are assigned a unique local ID within a work-group so that a single work-item can be uniquely identified by its global ID or by a combination of its local ID and work-group ID \cite{opencl_khronos}. \newline\newline
-Work-groups execute on CUs and share their local memory. All the work-items in the work-group share local memory and are mapped to PEs within a CU. These work-items are capable of identifying which work group they are parts of, work-group ID, size of work-groups, their global IDs and the global work size. \newline\newline 
-The work-group size has a device specific physical meaning. The maximum work-group size is a device characteristic. This can be determined by querying the device. Also, it is an integer value; thus, n-dimensional work-groups have to be handled in a special way. Work-groups are launched by the host device. \newline\newline
-The device particular work-group size is a scalar, but work-groups can have multiple dimensions. For example, if the maximum work group size is 32, work-groups could be launched in 3 dimensions like (8, 2, 2). The following must be true in order to launch the work-groups successfully: 
+There exists an index space provided by an N-dimensional index space. The index space supported in OpenCL is called an NDRange. It can be one, two or three dimensional. Each function invocation can access its index; this is how it is identified. A work item is a kernel invocation for a particular index, and the global id is a unique identity for every work item belonging to the index space. Every work item is provided with a global ID. The global work size is the number of work items in every dimension. The work dimension is the dimension of the index space.\newline\newline 
+From the Device Model, the processing elements are the ones which execute the instructions. To be able to execute the kernel multiple times on the device, the work item needs to be mapped to Processing Elements (PEs). Multiple work items are assigned to each PE, so that the case where number of PEs is less than the global work size can be taken care of. \newline\newline
+Now, every Compute Unit (CU) has a dedicated local memory which is shared by all PEs within. Local memory provides huge advantages in performance. Thus, work items must be mapped to the PEs in such a way that a group of them can access the local memory of a CU for effective execution. The partitioning of the global work size into smaller pieces leads to the formation of work groups. The work groups provide a more coarse-grained decomposition of the index space. Work groups are assigned a unique work group ID with the same dimension as the index space used for the work items. Work items are assigned a unique local ID within a work group so that a single work item can be uniquely identified by its global ID or by a combination of its local ID and work group ID \cite{opencl_khronos}. \newline\newline
+Work groups execute on CUs and share their local memory. All the work items in the work group share local memory and are mapped to PEs within a CU. These work items are capable of identifying which work group they are parts of, work group ID, size of work groups, their global IDs and the global work size. \newline\newline 
+The work group size has a device-specific physical meaning. The maximum work group size is a device characteristic. This can be determined by querying the device. Also, it is an integer value; thus, n-dimensional work groups have to be handled in a special way. Work groups are launched by the host device. \newline\newline
+The device dependent work group size is a scalar, but work groups can have multiple dimensions. For example, if the maximum work group size is 32, work groups could be launched in 3 dimensions like (8, 2, 2). The following must be true in order to launch the work groups successfully: 
 \begin{figure}[h!]
 \includegraphics[width=\linewidth]{figures/Work-Group_Size.JPG}
-\caption{Handling multi-dimensional work-group sizes}
+\caption{Handling multi-dimensional work group sizes}
 \label{fig:opencl4}
 \end{figure} 
 
-The figure below shows an example of how the local size, number of work-groups and global size vary for different dimensions of \verb|NDRange|:
+The figure below shows an example of how the local size, number of work groups and global size vary for different dimensions of \verb|NDRange|:
 \begin{figure}[h!]
 \includegraphics[width=\linewidth]{figures/NDRange_Kernel_Example.jpg}
 \caption{NDRange multi-dimensional index space example}
@@ -95,30 +95,34 @@ The host manages devices asynchronously. Host issues commands to the device, tel
 The OpenCL execution model supports data parallel and task parallel programming models. In OpenCL, the primary model is data parallel. \newline
 
 \subsubsection{Data Parallel}
-Data parallel programming model (equivalent to SIMD) defines computations in terms of a sequence of instructions applied to multiple elements of a dataset. In a strict data parallel model, a one-to-one mapping exists between a work-item and an element in the dataset over which a kernel can be executed in parallel. However, a strict one-to-one mapping is not required in OpenCL. \newline\newline
-A hierarchical data programming model exists in OpenCL, where the hierarchical subdivision can be achieved either explicitly or implicitly. In the explicit model, the total number of work-items to execute in parallel and how work-items are divided among work-groups must be defined by the programmer. On the other hand, the implicit model only requires the total number of work-items to execute in parallel to be defined, while the division into work-groups is taken care by the OpenCL implementation.
+Data parallel programming model (equivalent to SIMD) defines computations in terms of a sequence of instructions applied to multiple elements of a dataset. In a strict data parallel model, a one-to-one mapping exists between a work item and an element in the dataset over which a kernel can be executed in parallel. However, a strict one-to-one mapping is not required in OpenCL. \newline\newline
+A hierarchical data programming model exists in OpenCL, where the hierarchical subdivision can be achieved either explicitly or implicitly. In the explicit model, the total number of work items to execute in parallel and how work items are divided among work groups must be defined by the programmer. On the other hand, the implicit model only requires the total number of work items to execute in parallel to be defined, while the division into work groups is taken care by the OpenCL implementation.
 
 \subsubsection{Task Parallel}
-Task parallel programming model in OpenCL defines a model in which a single instance of a kernel is executed independent of any index space. It is equivalent to executing a kernel on a compute unit with a work-group containing a single work item. It is the simultaneous execution of many different tasks across the same or different memory objects.
+Task parallel programming model in OpenCL defines a model in which a single instance of a kernel is executed independent of any index space. It is equivalent to executing a kernel on a compute unit with a work group containing a single work item. It is the simultaneous execution of many different tasks across the same or different memory objects.
 
 \section{Experiments}
-A few simple experiments were conducted on different devices – an AMD GPU and an NVIDIA GPU, to see how performance varied on using the same OpenCL kernel code but with different execution parameters. A small kernel which performs 2-dimensional matrix multiplication was written in OpenCL and was launched with different work-group sizes on the specific platform to see how its execution varied. \newline\newline
-The host device selects the platform and the device, creates the context and command queue, initializes the matrices, creates memory buffers in the device, and transfers the data to the device memory. The two input matrices and one output matrix form the data passed to the kernel function as arguments, on which the matrix multiplication was performed in parallel. The execution is controlled by the \verb|clEnqueueNDRangeKernel| parameters, which define the work-group size by specifying the local size and global size. \newline\newline
+A few simple experiments were conducted on different devices – an AMD GPU and an NVIDIA GPU, to see how performance varied on using the same OpenCL kernel code but with different execution parameters. A small kernel which performs 2-dimensional matrix multiplication was written in OpenCL and was launched with different work group sizes on the specific platform to see how its execution varied. \newline\newline
+The host device selects the platform and the device, creates the context and command queue, initializes the matrices, creates memory buffers in the device, and transfers the data to the device memory. The two input matrices and one output matrix form the data passed to the kernel function as arguments, on which the matrix multiplication was performed in parallel. The execution is controlled by the \verb|clEnqueueNDRangeKernel| parameters, which define the work group size by specifying the local size and global size. \newline\newline
 
 \begin{equation}
-\mathbf{Work\, -group\, size = Local\, size}
+\mathbf{Work\, group\, size = Local\, size}
 \end{equation}
-The work-group size must be perfectly divisible by the specified global work size, failing which the kernel would not be launched and an error would be thrown. \newline\newline
+The work group size must be perfectly divisible by the specified global work size, failing which the kernel would not be launched and an error would be thrown. \newline\newline
 The resultant matrix was stored in a buffer and transferred back to the host asynchronously. The execution time was calculated and the result was compared for correctness by running the matrix multiplication sequentially on the host device. \newline\newline
 The following tables show the average timing results on AMD Radeon HD 8730M on platform OpenCL 2.0 AMD-APP (1800.8) and NVIDIA GeForce 405 on OpenCL 1.1 CUDA 4.2.1. \newline
 \begin{table}[h!]
 \centering
  \caption{Execution time (in µs) of matrix multiplication on AMD Radeon HD 8730M GPU}
- \begin{tabular}{ | m {5em} | m{2cm} | m{2cm} | m{2cm} | m{2cm} | m{2cm} | }
+ \vspace{3mm}
+ \renewcommand\arraystretch{1.3}
+ \begin{tabular}{|l|*{5}{r|}}
  \hline
  \multicolumn{6}{|c|}{2-D Matrix Multiplication Timings on AMD GPU} \\
  \hline
-  Global Size Local Size & 128 & 256 & 512 & 1024 & 2048\\
+ \backslashbox{\bfseries{Local}}{\bfseries{Global}}
+ &\makebox[4.5em]{\bfseries{128}}&\makebox[4.5em]{\bfseries{256}}&\makebox[4.5em]{\bfseries{512}}
+&\makebox[4.5em]{\bfseries{1024}}&\makebox[5.5em]{\bfseries{2048}}\\
  \hline
  Not Specified & 6121.25 & 48282.5 & 401073.58 & 3270198.86 & 16901530.39\\	
  2 & 8400.23 & 67250.57 & 530250.24 & 1082663.32 & 5365565.08\\
@@ -136,11 +140,15 @@ The following tables show the average timing results on AMD Radeon HD 8730M on p
 \begin{table}[h!]
 \centering
  \caption{Execution time (in µs) of matrix multiplication on NVIDIA GeForce 405 GPU}
- \begin{tabular}{ | m{5em} | m{2cm} | m{2cm} | m{2cm} | m{2cm} | m{2cm} |}
+ \vspace{3mm}
+ \renewcommand\arraystretch{1.3}
+ \begin{tabular}{|l|*{4}{r|}{c|}}
  \hline
  \multicolumn{6}{|c|}{2-D Matrix Multiplication Timings on NVIDIA GPU} \\
  \hline
-  Global Size Local Size & 128 & 256 & 512 & 1024 & 2048\\
+ \backslashbox{\bfseries{Local}}{\bfseries{Global}}
+ &\makebox[4.5em]{\bfseries{128}}&\makebox[4.5em]{\bfseries{256}}&\makebox[4.5em]{\bfseries{512}}
+&\makebox[4.5em]{\bfseries{1024}}&\makebox[5.5em]{\bfseries{2048}}\\
  \hline
  Not Specified & 6138.05 & 48312.10 & 401356.14 & 5773783.80 & Error\\	
  2 & 10721.54 & 58040.95 & 621084.80 & 4527345.84 & Error\\
@@ -155,6 +163,6 @@ The following tables show the average timing results on AMD Radeon HD 8730M on p
  \label{table:matrix2D_NVIDIA}
 \end{table}
 
-Table \ref{table:matrix2D_AMD} and Table \ref{table:matrix2D_NVIDIA} show the execution time (in µs) taken by the two-dimensional matrix multiplication kernel in OpenCL on AMD and NVIDIA GPUs, for different work group sizes (denoted by local size). The global work-size was increased from 128 to 2048 and the execution times were measured and noted. \newline\newline
-As observed in the results, the AMD Radeon 8730M GPU overpowers the NVIDIA GeForce 405 if their best execution times are compared for different global sizes. Both the devices follow a similar trend for maximum performance (or least execution time). For both the devices, there exists a trend of having a least execution time at a particular work-group size, beyond which the increasing the local work size leads to higher execution times (lower performance). In the case of AMD Radeon 8730M, the best performance is achieved when the work-group size is 4, while for NVIDIA GeForce 405 it is 8. These best performing work-group size values are device specific, as seen from the results. \newline\newline
-Upon further increasing the work-group size, it was noticed that the execution of OpenCL kernel was failing due to error in launching it. This work-group size was 32 for both AMD Radeon 8730M and NVIDIA GeForce 405. This falls in line with the Section 4.1.3.1 Execution Strategy, which mentions that the maximum work-group size is device specific. Thus, we can conclude that the maximum work-group size for both the GPUs is 16. \newline
+Table \ref{table:matrix2D_AMD} and Table \ref{table:matrix2D_NVIDIA} show the execution time (in µs) taken by the two-dimensional matrix multiplication kernel in OpenCL on AMD and NVIDIA GPUs, for different work group sizes (denoted by local size). The global work size was increased from 128 to 2048 and the execution times were measured and noted. \newline\newline
+As observed in the results, the AMD Radeon 8730M GPU overpowers the NVIDIA GeForce 405 if their best execution times are compared for different global sizes. Both the devices follow a similar trend for maximum performance (or least execution time). For both the devices, there exists a trend of having a least execution time at a particular work group size, beyond which the increasing the local work size leads to higher execution times (lower performance). In the case of AMD Radeon 8730M, the best performance is achieved when the work group size is 4, while for NVIDIA GeForce 405 it is 8. These best performing work group size values are device specific, as seen from the results. \newline\newline
+Upon further increasing the work group size, it was noticed that the execution of OpenCL kernel was failing due to error in launching it. This work group size was 32 for both AMD Radeon 8730M and NVIDIA GeForce 405. This falls in line with the Section 4.1.3.1 Execution Strategy, which mentions that the maximum work group size is device-specific. Thus, we can conclude that the maximum work group size for both the GPUs is 16. \newline
