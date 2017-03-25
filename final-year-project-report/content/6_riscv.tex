@@ -21,13 +21,14 @@ RISC-V's capabilities make it extremely powerful, yet simple and clean to implem
 RISC-V is specified as a base integer ISA, which is a must in any implementation, with additional extensions to the base ISA. Based on the width of the integer registers, the base instruction set has two variants, RV32I and RV64I. There is scope for a future variant RV128I for 128-bit address support \cite{riscv_isa_manual}. It provides support for extensive customization and specialization, along with extension beyond the base instruction set, but doesn't allow redefining these base integer instructions. \newline\newline
 There are four core instruction formats defined in the base instruction set, as shown follows:
 \begin{figure}[h!]
-\includegraphics[width=\linewidth]{figures/RISCV_Instruction_Formats.jpg}
+\centering
+\includegraphics[width=\linewidth]{figures/Instruction_Formats.jpg}
 \caption{Base instruction formats in RISC-V \cite{riscv_tools_bootcamp}}
 \label{fig:riscv1}
 \end{figure}
 
-Furthermore, there are two variations of the instruction formats (SB/UJ) based on how immediate values are taken care of. A few sets of standard extensions have been pre-defined to cater to general software development. These comprise integer multiplication/division (extension “M”), atomic operations (extension “A”), single-precision floating-point (extension “F”), and double-precision floating-point (extension “D”). A combination of these 4 standard extensions (denoted by “IMAFD”) is given a general abbreviation of “G”, which results in a general-purpose scalar instruction set. RV32G and RV64G are currently set as default targets of the RISC-V compiler toolchains. The base set and extensions have been kept separated to have a simple instruction set. \newline\newline
-The base integer instruction set for the 32-bit and 64-bit variants (RV32I/RV64I) comprises 40 instructions, while the general-purpose instruction set (RV32G/RV64G) supports 122 instructions. There are 31 general purpose registers x1-x31 capable of storing integer values, register x0 being hardwired to the constant value 0. The register width is 32 bits for RV32I and 64 bits for RV64I. RISC-V is based on the load-store architecture, where arithmetic operations only function on the data stored the registers and only the load and store operations access memory. The user address space is byte-addressed and little-endian. \newline\newline
+Furthermore, there are two variations of the instruction formats (SB/UJ) based on how immediate values are taken care of. A few sets of standard extensions have been pre-defined to cater to general software development. These comprise integer multiplication/division (extension “M”), atomic operations (extension “A”), single-precision floating-point (extension “F”), and double-precision floating-point (extension “D”). A combination of these 4 standard extensions (“IMAFD”) is given a general abbreviation of “G”, which results in a general-purpose scalar instruction set. RV32G and RV64G are currently set as default targets of the RISC-V compiler toolchains. The base set and extensions have been kept separated to have a simple instruction set. \newline\newline
+The base integer instruction set for the 32-bit and 64-bit variants (RV32I/\\RV64I) comprises 40 instructions, while the general-purpose instruction set (RV32G/RV64G) supports 122 instructions. There are 31 general purpose registers x1-x31 capable of storing integer values, register x0 being hardwired to the constant value 0. The register width is 32 bits for RV32I and 64 bits for RV64I. RISC-V is based on the load-store architecture, where arithmetic operations only function on the data stored the registers and only the load and store operations access memory. The user address space is byte-addressed and little-endian. \newline\newline
 There also exists a reduced version of the base integer instruction set (RV32I), designed specifically for embedded systems (denoted by “E”). The major difference is that the number of registers in RV32E is reduced to 16 from 31 in RV32I. A draft proposal for the RISC-V standard compressed instruction set has been made which reduces static and dynamic code size by adding short 16-bit instruction encodings for conventional operations. Denoted by the extension “C”, it could be added to any of the base ISA variants (RV32I, RV64I, and RV128I). 
 
  \section{Software Tools and Setup Required}
@@ -35,8 +36,9 @@ There also exists a reduced version of the base integer instruction set (RV32I),
 
 \subsection{Software Tools}
  \label{sect6_2_1}
-Several software tools and libraries are required to be downloaded and setup before any development on RISC-V can begin. These comprise the riscv-tools infrastructure and are available on GitHub. It is a meta-repository with Git submodules containing every stable component of the RISC-V software toolchain \cite{riscv_tools_bootcamp}. The image below shows the software stack of riscv-tools: \newline\newline
+Several software tools and libraries are required to be downloaded and setup before any development on RISC-V can begin. A meta-repository is available on GitHub, with Git submodules containing every stable component of the RISC-V software toolchain \cite{riscv_tools_bootcamp}. The image below shows the software stack of riscv-tools: 
 \begin{figure}[h!]
+\centering
 \includegraphics[width=\linewidth]{figures/RISC-V_Software_Stack.png}
 \caption{Software stack for RISC-V tools \cite{riscv_tools_bootcamp}}
 \label{fig:riscv2}
@@ -138,6 +140,7 @@ After the installation procedure is finished, testing was done to make sure that
 The output generated should be "Hello world!", as shown below in Figure \ref{fig:riscv3} \newline
 
 \begin{figure}[h!]
+\centering
 \includegraphics[width=\linewidth]{figures/Spike_Output.png}
 \caption{Hello World program execution on Spike}
 \label{fig:riscv3}
@@ -251,9 +254,10 @@ In order to test the working of the downloaded toolchain, the test bench provide
 
 \subsection{Execution of Simple C Programs}
  \label{sect6_3_3}
-After the installation of all tools required for using PicoRV32 was completed, the testbench provided was run by executing the make command. The following output was obtained:\newline\newline
+After the installation of all tools required for using PicoRV32 was completed, the testbench provided was run by executing the make command. The following output was obtained:
 
 \begin{figure}[h!]
+\centering
 \includegraphics[width=\linewidth]{figures/PicoRV32_Execution.png}
 \caption{Successful execution of PicRV32 testbench}
 \label{fig:riscv4}
@@ -268,7 +272,7 @@ This demonstrates that the installation was done successfully. The output is pro
 \end{figure}
 
 Upon further analysis of the compilation and execution flow, it was observed that the Icarus Verilog compiler compiles the \textit{testbench.v} and \textit{picorv32.v} files and generates an intermediate \verb|vvp| assembly file, \textit{testbench.vvp}. This is followed by the compilation of the \textit{start.S} assembly file, the C codes and test assembly files the into their binaries using the \verb|riscv32-unknown-el-| \\ \verb|f-gcc| command. This is succeeded by the generation of an executable file \textit{firmware.elf}, which is translated into a \textit{firmware.bin} file by \verb|riscv32-unknown-| \\ \verb|elf-objcopy| utility. In order to run the machine code on the processor, a script makehex.py in the firmware directory was used to convert the \textit{firmware.elf} file into \textit{firmware.hex} file. The \textit{firmware.hex} file contains instructions as defined by the RISC-V specification in the 32-bit format (represented as 8 digit hexadecimal numbers), which are passed to PicoRV32. The \verb|vvp| command of Icarus Verilog runs the previously generated \textit{testbench.vvp} file and executes the machine code on PicoRV32. The whole flow is shown as an activity diagram in Figure \ref{fig:riscv5}.\newline\newline
-Observing the testbench output provided deep insights into how the execution maps from the high-level language C code to the low-level machine code. To understand how the processor executes these instructions, the Verilog file \textit{picorv32.v} was studied and understood. The instructions are loaded from the firmware.hex file in the testbench, which is stored in a 1024-bit wide register.\newline
+Observing the testbench output provided deep insights into how the execution maps from the high-level language C code to the low-level machine code. To understand how the processor executes these instructions, the Verilog file \textit{picorv32.v} was studied and understood. The instructions are loaded from the firmware.hex file in the testbench, which is stored in a 1024-bit wide register.
 \begin{lstlisting}[language=Verilog]
 reg [1023:0] firmware_file;
 initial begin
@@ -282,24 +286,22 @@ The above code snippet shows the loading of the instructions into a 32-bit wide,
 reg [31:0]   memory [0:64*1024/4-1];
 \end{lstlisting}
 This memory is the source of instructions for the processor, which lacks a default instruction memory. As mentioned in 5.3.1, PicoRV32 is available in two variants. In this case, the \verb|axi4_memory| is interfaced to the \verb|picorv32_axi| version of PicoRV32 core, using the \verb|picorv32_axi_adapter|. \newline\newline
-Along with being the instruction source, this \verb|axi4_memory| memory instance acts as the data memory as well. This implies that PicoRV32 follows a \textbf{von Neumann} architecture with a unified memory for storing data and instructions. The assembly file \textit{start.S} is used to allocate specific parts of the memory instance to be used as data memory. This brings complexity in the form of management of different sections of the same memory for instruction and data storage purposes.
-
-
+Along with being the instruction source, this \verb|axi4_memory| memory instance acts as the data memory as well. This implies that PicoRV32 follows a \textbf{von Neumann} architecture with a unified memory for storing data and instructions. The assembly file \textit{start.S} is used to allocate specific parts of the memory instance to be used as data memory. This brings complexity in the form of management of different sections of the same memory for instruction and data storage purposes.\newline\newline
+On an average, PicoRV32 was observed to have a Cycles Per Instruction (CPI) value of 4.8. The execution of some specific instructions increased the CPI. 
 
  \section{Implementation of RISC-V Processor}
  \label{sect6_4}
-After understanding the working of PicoRV32 from a high-level perspective, the next step is to design and implement a small processor based on the RISC-V 32-bit base integer instruction set. PicoRV32 has several features, like custom instructions for IRQ handling, a unified memory for data and instructions, which make the processor complicated and heavier.\newline\newline
-On an average, PicoRV32 was observed to have a Cycles Per Instruction (CPI) value of 4.8. The execution of some specific instructions increased the CPI. 
+After understanding the working of PicoRV32 from a high-level perspective, the next step is to design and implement a small processor based on the RISC-V 32-bit base integer instruction set. PicoRV32 has several features, like custom instructions for IRQ handling, a unified memory for data and instructions, which make the processor complicated and heavier.
 
 \subsection{Objective}
 \label{sect6_4_1}
-The objective is to develop a smaller and more efficient processor and analyze whether it could perform better than PicoRV32. The initial implementation intends to be capable of performing only a small set of instructions and compare its performance with PicoRV32. A fully functional processor implementing RISC-V ISA meeting the desired requirements (as mentioned in Section 6.4.2) must be developed before it could be further extended. 
-
+The objective is to develop a smaller and more efficient processor and analyze whether it could perform better than PicoRV32. The initial implementation intends to be capable of performing only a small set of instructions and compare its performance with PicoRV32. A fully functional processor implementing RISC-V ISA meeting the desired requirements (as mentioned in Section 6.4.2) must be developed before it could be further extended.\newline\newline
+ModelSim SE-64 10.5 was used for implementing the RISCVProcessor in Verilog.
 \subsection{Design}
 \label{sect6_4_2}
 \subsubsection{Requirements}
 \label{section:sect6_4_2_1}
-The design of any RISC based processor follows the load store architecture. It would be a 32-bit variant of the base integer instruction set, meaning that the registers width would be 32 bits. To start off with, the following instructions need to be present in our RISC-V implementation:
+The design of any RISC based processor follows the load-store architecture. This would be a 32-bit variant of the base integer instruction set, meaning that the registers width would be 32 bits. It would support instructions from the base integer instruction set and the multiplication extension (RV32IM). To start off with, the following instructions need to be present in our RISC-V implementation:
 \begin{itemize}
 \item Arithmetic: ADD, ADDI, MUL
 \item Load/Store: LW, SW
@@ -314,19 +316,29 @@ Harvard architecture is selected over von Neumann architecture, as data and inst
 The processor would be built using the required components as stated above in \ref{section:sect6_4_2_1}. This section discusses the functional requirements desired in the components.
 
 \begin{enumerate}
-\item \textbf{Control Unit} \newline
-The Control Unit determines the execution of operations on the processor. It instructs the processor's components like memory, ALU and input and output devices to respond to the program instructions. It can be perceived as the brain inside the CPU, making it the brain inside the brain of the computer. \newline\newline
-It consists of two registers, namely the Program Counter (PC) register and the Instruction Register (IR). PC points to the address of the instruction to be executed, while IR contains the instruction being currently interpreted. Instructions are fetched from the instruction memory and decoded in the Control Unit. The data required for the instruction to execute is extracted from the registers or data memory, and passed on to the ALU to perform the operation specified by the instruction opcode. \newline\newline
-The design of the control unit needs to be done according to RISC-V instruction specifications. As seen in Figure \ref{fig:riscv5}, the instruction contains additional information about the instruction in bits func7 and func3 which distinguish several instructions; opcodes can be the same for various instructions, as shown below.
+\item \textbf{Registers} \newline
+Under the RISC-V specification, the base integer instruction set has a set of 32 registers, each 32-bit wide (x1-x31, x0 hardwired to constant 0). The Control Unit decodes instructions and extracts the register address on which the ALU needs to perform specified instructions. Data can be transferred between memory and registers using the load and store instructions. Thus, in a load store architecture, register memory is significant and should be wisely used in order to reduce overheads of memory accesses. It can be declared as shown in the following code snippet:
+
+\begin{lstlisting}[language=Verilog]
+reg [31:0] regdata [0:31;
+regdata[0] = 32'h0;  //Constant 0 stored in location 0
+\end{lstlisting}
+
+\item \textbf{Decode Unit} \newline
+The decoder determines the meaning of each instruction the processor needs to perform. It fetches the instructions from the instruction memory, and extracts necessary information commanding the CPU what instruction must be performed on what data. \newline\newline
+The decoder extracts the information of register addresses from which data needs to be accessed, as well as the operation required to be done. This is specified by the 7-bit \verb|opcode|, 3-bit \verb|func3| and 7-bit \verb|func7| bits in the 32-bit instruction, as seen in Figure \ref{fig:riscv1}.\newline\newline
+The design of the decode unit needs to be done according to RISC-V instruction specifications, as seen in Figure \ref{fig:riscv6}. The \verb|func7| and \verb|func3| bits  distinguish several instructions. The \verb|opcode| can be same for various instructions, typically for the same class of instruction (R-type, I-type, etc.).
 
 \begin{figure}[h!]
+\centering
 \includegraphics[width=\linewidth]{figures/RISCV_Instruction_Formats.jpg}
 \caption{Formats for RISC-V instructions to be implemented \cite{riscv_isa_manual}}
 \label{fig:riscv6}
 \end{figure}
 
-\item \textbf{Registers} \newline
-Under the RISC-V specification, the base integer instruction set has a set of 32 registers, each 32-bit wide (x1-x31, x0 hardwired to constant 0). The Control Unit decodes instructions and extracts the register address on which the ALU needs to perform specified instructions. Data can be transferred between memory and registers using the load and store instructions. Thus, in a load store architecture, register memory is significant and should be wisely used in order to reduce overheads of memory accesses. It can be declared as shown in the following code snippet:
+\item \textbf{Control Unit} \newline
+The Control Unit determines the execution of operations on the processor. It instructs the processor's components like memory, ALU and input and output devices to respond to the program instructions. It can be perceived as the brain inside the CPU, making it the brain inside the brain of the computer. It is responsible for controlling the flow of data in specific ways for different instructions. This is done by signaling various flags which activate or deactivate different components of the CPU. \newline\newline
+It consists of two registers, namely the Program Counter (PC) register and the Instruction Register (IR). PC points to the address of the instruction to be executed, while IR contains the instruction being currently interpreted. Instructions are fetched from the instruction memory and decoded in the Control Unit. The data required for the instruction to execute is extracted from the registers or data memory, and passed on to the ALU to perform the operation specified by the instruction opcode.
 
 \item \textbf{Memory} \newline
 Memory stores instructions and data. Being a Harvard Architecture processor, there would be a clear separation of instructions and data. A little endian memory system would be followed. The instruction memory stores the instructions generated by the makehex.py script, converting the firmware.bin file to firmware.hex format. The width and length of the instruction memory are 32 bits and 16384 lines, respectively. 
@@ -334,14 +346,87 @@ Memory stores instructions and data. Being a Harvard Architecture processor, the
 \item \textbf{Arithmetic and Logic Unit} \newline
 The Arithmetic and Logic Unit of a CPU performs arithmetic and logical operations on operands specified by the instructions. It is the fundamental unit of the CPU of any computing device. After performing an operation, the result is stored back into the register file at the address specified by the instruction.
 
-\begin{figure}
+\begin{figure}[h!]
 \centering
 \includegraphics[width=8.5cm]{figures/ALU_block.PNG}
 \caption{Symbolic representation of an ALU}
 \label{fig:riscv7}
 \end{figure}
-
 \end{enumerate}
+
+\subsection{Implementation Details}
+\label{sect6_4_3}
+
+\subsubsection{Testbench Simulation}
+\label{sect6_4_3_2}
+
+\subsubsection*{ADD}
+\label{sect6_4_3_2a}
+
+32-bit Instruction: 0x004100b3 \newline
+Meaning: ADD R1, R2, R4 \newline
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\linewidth]{figures/RISCV_Implementation_ADD.PNG}
+\caption{Testbench simulation result for ADD}
+\label{fig:riscv9}
+\end{figure}
+
+\subsubsection*{MUL}
+\label{sect6_4_3_2b}
+
+32-bit Instruction: 0x024100b3 \newline
+Meaning: MUL R1, R2, R4
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\linewidth]{figures/RISCV_Implementation_MUL.PNG}
+\caption{Testbench simulation result for MUL}
+\label{fig:riscv10}
+\end{figure}
+
+\subsubsection*{ADDI}
+\label{sect6_4_3_2c}
+
+32-bit Instruction: 0x06418393 \newline
+Meaning: ADDI R7, R3, \#100
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\linewidth]{figures/RISCV_Implementation_ADDI.PNG}
+\caption{Testbench simulation result for ADDI}
+\label{fig:riscv11}
+\end{figure}
+
+\subsubsection*{LW}
+\label{sect6_4_3_2d}
+
+32-bit Instruction: 0x0000a283 \newline
+Meaning: LW R5, [R1, \#0]
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\linewidth]{figures/RISCV_Implementation_LW.PNG}
+\caption{Testbench simulation result for LW}
+\label{fig:riscv12}
+\end{figure}
+
+\subsubsection*{SW}
+\label{sect6_4_3_2e}
+
+32-bit Instruction: 0x00522423 \newline
+Meaning: SW R5, [R4, \#8]
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\linewidth]{figures/RISCV_Implementation_SW.PNG}
+\caption{Testbench simulation result for SW}
+\label{fig:riscv13}
+\end{figure}
+
+\subsubsection*{BNE}
+\label{sect6_4_3_2f}
 
 
 
