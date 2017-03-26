@@ -4,6 +4,14 @@ This chapter concludes and summarizes this report.
 Furthermore, in this chapter we discuss future research directions in detail.
 
 \section{Conclusions}
+\label{sect7_1}
+The first part of this report discussed OpenCL programming model in a detailed manner to explain the results of the experiments conducted thereafter on multiple OpenCL applications. In the beginning, experiments were conducted using a simple matrix multiplication OpenCL kernels with varied data sizes. The performance with respect to execution time and \ac{GOPS} on different devices and different mappings of computations on each device were profiled. It was concluded that different devices perform the best for particular local sizes chosen for the mapping of kernels onto the device.\newline\newline
+This was followed by profiling a real-world application with heavy computational requirements. An existing CNN application following the LeNet-5 architecture was profiled across few accelerating devices, and their performance was inspected. It was observed that the device characteristics effected the amount of parallelisation done by OpenCL, which in turn had a direct impact on the execution times.\newline\newline
+The second part of the report shifted focus towards the open source and free RISC-V ISA, explaining the benefits and advantages for its widespread usage, its design specifications and installation steps for development. An existing implementation of a RISC-V processor was studied as an example, and its features, installation requirements and steps taken to execute programs were understood.\newline\newline
+Following this, an understanding of RISC-V ISA specifications was attained in order to design and develop a new, simpler implementation of a processor with the aim of developing the fundamental unit for the hypothetical engine with huge computational capabilities. The RV32IM variant of the ISA was chosen as the target support for this processor.
 
 \section{Future work}
+\label{sect7_2}
+The future work mainly comprises extending the support of instructions on this implementation of a RISC-V processor. The next step would be to enhance the processor to be able to execute C programs. This would be done with the usage of two assembly scripts, for setting up the instruction and data memories to be required for C program execution. The future goal is to emulate the support provided by PicoRV32, with reduced complexity. \newline\newline
+Furthermore, the processor needs to be configured such that it could be detected by the OpenCL platform to be used as an accelerator device. A network of such devices could thus be combined to form a dedicated acceleration engine, capable of executing applications with high computational requirements. This substantiates the requirement of having a parallel programming language supported on the processor implementation to divide the tasks among multiple cores of the hypothetical accelerator.
 

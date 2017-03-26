@@ -1,17 +1,31 @@
 \chapter{Introduction}
 \label{ch1_introduction}
 \section{Motivation}
-Silicon technology will continue to provide an exponential increase in the availability of raw transistors. 
+\label{sect1_1}
 
-Shuvam Nandi
+The demand for high performance computing has led to a shift from single-core to multi-core processor architectures. Moore's law predicted that the number of transistors per square inch on integrated circuits will double every year, since transistors were invented. This seemingly endless size reduction and density increment of transistors has positively impacted the growth in the number of cores, while causing a negative impact of exponential surges in power consumed per square unit of transistors \cite{mimerschedval2015}. This has resulted in a fundamental shift in microprocessor design from frequency scaling to increased number of cores, leading to emergence of many-core architectures. Such designs have proven to enhance performance without the cost of greater power consumption \cite{intel2010}. \newline\newline
+Typically, parallel devices like \ac{GPU} are used for processing large graphics data sets at extremely fast performance. However, the usage of GPUs and \ac{FPGA} for accelerating complex tasks has been becoming more and more common these days \cite{acm2004} \cite{vlsi2005}. Thus, multi-core heterogeneous co-processors are being used widely with the promise of greater performance and power efficiency gains \cite{acmsurvery2015}.\newline\newline
+The goal of the objective is to design a processor capable of delivering high computational performance. This would be achieving by connecting several of these processors in a many-core architecture network. Such a powerful hypothetical engine is a distant goal in the future, with an expectation of performance in the range of Peta OPS ($10^15$ Operations per Second). The \ac{ISA} based on which the processor will be designed is RISC-V, a new ISA initially designed with the purpose to support computer architecture research and education \cite{riscv_home}. It has now set to become an industry wide implementation standard, with several processors already running this ISA (discussed in Chapter \ref{ch3_lit_review}.\newline\newline
+GPUs and CPUs have been selected to study performance in running a complex real world application in this project. GPUs offer high data-parallel processing throughputs and naturally map the convolution-rich nature of deep learning code to floating-point ALUs \cite{caffe2016}. OpenCL is an open-source framework supporting GPU programming. It can be used to program devices ranging from CPUs, GPUs, FPGAs, and other devices from different vendors. Therefore, such a framework is opted for supporting programs to introduce cross-compatibility across various heterogeneous parallel computing platforms.
 
+\section{Project Scope}
+\label{sect1_2}
 
+The project covers the following areas:
+\begin{enumerate}
+\item Understanding the OpenCL programming model to execute programs on heterogeneous devices
+\item Familiarisation with convolutional neural networks and  techniques used in solving learning problems
+\item Comparison of performance of an application solving a real-world problem using OpenCL and profiling various platforms
+\item Understanding the need of an open-source ISA like RISC-V and studying a processor following this architecture
+\item Design and implement a new processor with RISC-V foundation
+\end{enumerate}
 
 \section{Organization}
-The remainder of the report is organized as follows: 
-Chapter \ref{ch2_background} presents background information on
-Chapter \ref{ch3_lit_review} studies current state of the art overlays and techniques for placement and routing.
-Chapter \ref{ch4_opencl} 
-Chapter \ref{ch5_cnn} throws light 
-Chapter \ref{ch6_riscv} shows 
-We thereby conclude in chapter \ref{ch7_conclusion} and discuss future work.
+\label{sect1_3}
+The report consists of the following chapters: 
+\textbf{Chapter \ref{ch2_background}} presents background software knowledge and hardware requirements needed for this project.
+\textbf{Chapter \ref{ch3_lit_review}} studies an implementation of OpenCL platform and its features. Few details of the LeNet-5 architecture of Convolutional Neural Networks are also explained. The chapter continues to discuss previously used ISAs and the need for a new ISA which was met by RISC-V. Implementations of processors based on this architecture are also seen here.
+\textbf{Chapter \ref{ch4_opencl}} explains in detail how OpenCL capitalises on devices with parallel programming capabilities. A few simple experiments are conducted to demonstrate how optimum results can be achieved. 
+\textbf{Chapter \ref{ch5_cnn}} throws light into the field of neural networks, exploring few models of neural networks. The work of Lecun, Y. in the field of character recognition using \ac{CNN} and Deep Learning is discussed in detail. An existing application is analysed and profiled on multiple devices.
+\textbf{Chapter \ref{ch6_riscv}} shows how an open-source architecture would benefit the evolution of technology. RISC-V is studied as the architecture to be used for the development of a hypothetical accelerator consisting of a network of individual processors. The implementation of a new processor based on this ISA is discussed and explained in detail. 
+We thereby conclude in \textbf{Chapter \ref{ch7_conclusion}} and discuss work to be done in the future.

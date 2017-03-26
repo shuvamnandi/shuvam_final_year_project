@@ -1,7 +1,7 @@
 \chapter{Convolutional Neural Networks}
 \label{ch5_cnn}
 
-Convolutional Neutral Network (CNN) is a classification of multi-layered neural networks \cite{cnn_lecun_lenet5}. CNNs have excellent performance in areas such as image recognition and classification.  CNNs are at the core of state-of-the-art approaches to a variety of computer vision tasks, including image classification \cite{kriz_suts_hinton_nips2012} and object detection \cite{gir_don_dar_mal_cvpr2014}. They are widely used in the detection and identification of faces, objects and animals, apart from powering robot vision and driverless cars \cite{cnn_karn}. LeNet-5 is one such convolutional network designed for handwritten and machine-printed character and digit recognition.
+Convolutional Neutral Network (CNN) is a classification of multi-layered neural networks \cite{cnn_lecun_lenet5}. CNNs have excellent performance in areas such as image recognition and classification.  CNNs are at the core of state-of-the-art approaches to a variety of computer vision tasks, including image classification \cite{kriz_suts_hinton_nips2012} and object detection \cite{gir_don_dar_mal_cvpr2014}. They are widely used in the detection and identification of faces, objects and animals, apart from powering robot vision and driverless cars \cite{cnn_karn}. LeNet-5 is one such model designed for handwritten and machine-printed character and digit recognition.
 
 \section{Introduction}
 \label{sect5_1}
@@ -357,4 +357,4 @@ As evident from Table \ref{table:mnist_gops}, the performance of Intel(R) Xeon(R
 \label{fig:cnn17}
 \end{figure}
 
-Due to higher number of compute units (12) for the CPU, OpenCL is able to parrallelise the code to a much greater extent, as compared to the GPU (2). Also, the clock frequency at which the CPU can execute at (3.2 GHz) is much higher than that of  the GPU (1.28 GHz). Thus, the CPU shows better performance in executing OpenCL parallelised code.
+Because of the higher number of compute units (12) for the CPU, OpenCL brings about parrallelisation of the code to a much greater extent, as compared to the GPU (2). Furthermore, the clock frequency at which the CPU can execute at (3.2 GHz) is higher than that of  the GPU (1.28 GHz). Thus, this CPU shows better performance relative to the GPU in executing OpenCL kernels.
