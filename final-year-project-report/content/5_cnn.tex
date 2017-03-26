@@ -12,14 +12,14 @@ An Artificial Neural Network, simply put as Neural Network, is a computational m
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=8cm]{figures/neuron.png}
+\includegraphics[width=8cm]{figures/Neuron.png}
 \caption{Representation of a biological neuron\cite{nn_stanford_1}}
 \label{fig:cnn1}
 \end{figure}
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=7cm]{figures/neuron_model.jpg}
+\includegraphics[width=7cm]{figures/Neuron_Model.jpg}
 \caption{Computational model of a neuron \cite{nn_stanford_1}}
 \label{fig:cnn2}
 \end{figure}
@@ -98,7 +98,7 @@ CNNs are biologically-inspired variants of MLPs. They take benefit of the fact t
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=6cm]{figures/neural_net.png}
+\includegraphics[width=6cm]{figures/Neural_Net.png}
 \hspace{7mm}
 \includegraphics[width=6cm]{figures/cnn.png}
 \caption{Visualisation of a Feedforward neural network \textit{(left)} and a CNN \textit{(right)}}
@@ -123,7 +123,7 @@ The operations forming the building blocks of every convolutional neural network
 \begin{itemize}
 \item Convolution
 \item Pooling or Down-Sampling
-\item Non Linearity (ReLu)
+\item Activation Function for Non Linearity (ReLu)
 \item Classification (Fully Connected Layer)
 \end{itemize}
 
@@ -131,9 +131,9 @@ The operations forming the building blocks of every convolutional neural network
 \label{sect5_1_2_1a_a}
 Channel is a traditional term used to refer to a the coloured component of an image. A coloured image from a has three channels – red, green and blue, and could be imagined as three 2D-matrices stacked over each other (one for each color), each having pixel values in the range 0 to 255.\newline\newline
 On the other hand, grayscale images have just one channel. The value of each pixel in the matrix will range from 0 to 255 – zero indicating black and 255 indicating white. Convolution layer extracts key features from the input image using convolution operations. It preserves the spatial relationship between pixels by learning image features using small squares of input data.\newline\newline
-The image is convoluted against multiple filters, resulting in the formation of different feature maps. Essentially, each filer is a 2D matrix (for a grayscale image), based on the value of whose individual elements, feature maps vary. \newline\newline
-The orange matrix is slided over the image matrix 1 pixel  at a time (also called ‘stride’), and for each position, an element wise multiplication is computed (between the two matrices). The multiplication outputs are added to get the final integer which makes one element of the output matrix at the corresponding position. The 3×3 filter only observes one part of the input image in each stride.\newline\newline
-For example, if there is a 5x5 image convoluted against a 3x3 filter as follows, a feature map will be generated based on the convolution result. For a different filter matrix, another feature map would have been generated.\newline\newline
+The image is convolved with multiple filters, resulting in the formation of different feature maps. Essentially, each filer is a 2D matrix (for a grayscale image), based on the value of whose individual elements, feature maps vary. \newline\newline
+The orange matrix is slided over the image matrix, 1 pixel  at a time (also called ‘stride’), and for each position, an element wise multiplication is computed (between the two matrices). The multiplication outputs are added to get the final integer which makes one element of the output matrix at the corresponding position. The 3×3 filter only observes one part of the input image in each stride.\newline\newline
+For example, if there is a 5x5 image convolved with a 3x3 filter as follows, a feature map will be generated based on the convolution result. For a different filter matrix, another feature map would have been generated.\newline\newline
 \begin{figure}[h!]
 \centering
 \includegraphics[width=3cm]{figures/Image.png}
@@ -150,25 +150,25 @@ For example, if there is a 5x5 image convoluted against a 3x3 filter as follows,
 \label{fig:cnn9}
 \end{figure}
 
-In the practical world, a CNN learns the values or weights of these filters itself during the training process. The more number of filters, the more image features are extracted and the better the network becomes at recognizing patterns in images not seen previously.
+In the practical world, a CNN learns the values or weights of these filters itself during the training process. The greater the number of filters, the more image features are extracted and the better the network becomes at recognizing patterns in images, not seen previously.
 
 
 \subsubsection*{Pooling Layer}
 \label{sect5_1_2_1a_b}
-Pooling or down-sampling reduces the dimensionality of each feature map but retains the most important details. It could be done using different mathematical operations: addition, average or maximum.\newline\newline
+Pooling or down-sampling reduces the dimensions of each feature map but retains the most important details. It could be done using different mathematical operations: addition, average or maximum.\newline\newline
 In case of Max Pooling, a spatial neighborhood is defined (for example, a 2×2 window) and the largest element is taken from the rectified feature map within that window.
 \begin{figure}[h!]
 \centering
 \includegraphics[width=8cm]{figures/Max_Pooling.png}
 \caption{Demonstration of Max Pooling}
-\label{fig:cnn8}
+\label{fig:cnn10}
 \end{figure}
-The dimensionality of the 2D dimensional window (2x2) is also called as stride. The window is slided by the stride value, and the maximum value from that region is taken in the reduced feature map. This is how the dimensionality of the feature map decreases. Figure \ref{fig:cnn9} demonstrates how pooling reduces the size of the feature map for a sample image.
+The dimensionality of the 2-dimensional window (2x2) is also called as stride. The window is slided by the stride value, and the maximum value from that region is taken in the reduced feature map. This is how the dimensionality of the feature map decreases. Figure \ref{fig:cnn9} demonstrates how pooling reduces the size of the feature map for a sample image.
 \begin{figure}[h!]
 \centering
 \includegraphics[width=10cm]{figures/Effect_Pooling.png}
 \caption{Effect of Max Pooling layer on a sample image}
-\label{fig:cnn9}
+\label{fig:cnn11}
 \end{figure}
 
 \subsubsection*{Non-Linearity Layer (ReLU)}
@@ -181,14 +181,14 @@ This is an additional layer utilised to introduce non-linearity in the image fea
 \centering
 \includegraphics[width=8cm]{figures/ReLu_Layer.png}
 \caption{Non-linearity operation in ReLU layer}
-\label{fig:cnn10}
+\label{fig:cnn12}
 \end{figure}\newline
 This operation is done on every single element of the image or its feature map(s), replacing every negative value with a zero.
 \begin{figure}[h!]
 \centering
 \includegraphics[width=12cm]{figures/Effect_ReLu.png}
 \caption{Effect of ReLU layer on a sample image}
-\label{fig:cnn11}
+\label{fig:cnn13}
 \end{figure}
 The purpose of ReLU is to introduce non-linearity in our CNN, since most of the real-world data the network would be classifying would be non-linear. Other non-linear functions such as \textbf{tanh} or \textbf{sigmoid} could also be used as an alternative. Figure \ref{fig:cnn11} shows the effect of applying non-linearity on an image.
 
@@ -207,15 +207,16 @@ These steps are repeated across all images present in the dataset to train the C
 \subsubsection{Visualisation}
 \label{sect5_1_2_2}
 Along with visualising \ac{MLP}, Andy Harley developed a visualisation tool for a CNN trained to recognise handwritten digits from the MNIST database \cite{harley2015isvc} as well. \newline\newline
-This CNN has 1024 nodes on the bottom layer (corresponding to pixels), six 5x5 (stride 1) convolutional filters in the first hidden layer, followed by sixteen 5x5 (stride 1) convolutional filters in the second hidden layer, then three fully-connected layers, with 120 nodes in the first, 100 nodes in the second, and 10 nodes in the third. The convolutional layers are each followed by a downsampling layer that does 2x2 max pooling (with stride 2)\cite{harley2015isvc}. \newline\newline
-The following figure shows how this network can be visualised in 2D.
+The following figure shows how a network can be visualised in 2D.
 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=13cm]{figures/ConvNet_2D.png}
 \caption{2D Visualisation of a CNN recognising MNIST handwritten digits \cite{harley2015isvc}}
-\label{fig:cnn12}
+\label{fig:cnn14}
 \end{figure}
+
+This CNN has 1024 nodes on the bottom layer (corresponding to pixels), six 5x5 (stride 1) convolutional filters in the first hidden layer, followed by sixteen 5x5 (stride 1) convolutional filters in the second hidden layer, then three fully-connected layers, with 120 nodes in the first, 100 nodes in the second, and 10 nodes in the third. The convolutional layers are each followed by a downsampling layer that does 2x2 max pooling (with stride 2)\cite{harley2015isvc}.
 
 \section{MNIST Database}
 \label{sect5_2}
@@ -228,17 +229,31 @@ A number of scientific papers have been written to attempt achieving the lowest 
 \label{sect5_3}
 An existing real word application was obtained and executed to further gauge the performance capabilities of OpenCL. An MNIST handwritten digits prediction application written by Gopala Krishna Hegde based on LeNet-5 convolutional neural networks was cloned from GitHub for this purpose \cite{cnn_mnist_papaa}. The implementation has been done in C++ as well as OpenCL.
 
-\subsection{Code Analysis of Application}
+\subsection{Analysis of Application Code}
 \label{sect5_3_1}
-After understanding how the LeNet-5 architecture works, the application was studied and the sizes and computations of the various layers within the CNN were determined.\newline\newline
-\textbf{Add chart showing the whole process and write text to explain briefly} \newline\newline
-The following table indicates the use of various layers from the LeNet-5 architecture in this application. Each layer has an input size, output size and number of computations associated with it.
+After understanding how the LeNet-5 architecture works, the application was studied and the sizes and computations of the various layers within the CNN were determined. For each layer, mathematical operations like add, substract, multiply, divide and finding the maximum of two numbers were counted as operations.\newline\newline
+The layers in the network can be represented as follows:
+\begin{figure}[h!]
+\centering
+\includegraphics[width=13cm]{figures/Papaa_LeNet5-1.png}
+\caption{Representation of the classification process - \textit{Part 1}}
+\label{fig:cnn14}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=\linewidth]{figures/Papaa_LeNet5-2.png}
+\caption{Representation of the classification process - \textit{Part 2}}
+\label{fig:cnn16}
+\end{figure}
+
+The following table indicates the use of various layers from the LeNet-5 architecture in this application. Each layer has an input size, output size and number of computations associated with it.\newline
 
 \begin{table}[h!]
 \centering
  \caption{Characterisitics of LeNet-5 layers in application using CNN to recognise hand-written digits}
  \vspace{3mm}
- \renewcommand\arraystretch{1.6}
+ \renewcommand\arraystretch{1.4}
  \begin{tabular}{ | m{7em} | c | c | c | c | r | }
  \hline
  \multicolumn{6}{|c|}{LeNet-5 CNN Application: Characterisitics layers} \\
@@ -264,12 +279,11 @@ The following table indicates the use of various layers from the LeNet-5 archite
  \end{tabular}
  \label{table:mnist_layers_comp}
 \end{table}
-
-From Table \ref{table:mnist_layers_comp}, it can be calculated that the total number of computations performed by all the layers is \verb|9,861,672|. This is the number of computations required for a single image to be classified and recognised.
+From Table \ref{table:mnist_layers_comp}, it can be calculated that the total number of computations performed by all the layers is \verb|9,861,672|. This is the number of computations required for a single image to be classified and recognised as a digit.
 
 \subsection{Results}
 \label{sect5_3_2}
-The MNIST handwritten digit recognition application was executed on different devices - two CPUs and one GPU, and average timings were calculated for different parts in the execution of kernels. There is a total of eight kernels executing on the device, launched by the host one after the other. The kernels launched have a work dimension of 3 and their global sizes are (12, 12, 20). Also, the sequential variant of the code written in C++ was executed on the two CPUs, and timings were noted. \newline\newline
+The MNIST handwritten digit recognition application was executed on different devices - two CPUs and one GPU, and average timings were calculated for different parts in the execution of kernels. There is a total of eight kernels executing on the device, launched by the host one after the other. Each kernel corresponds to a layer, as show in Figures \ref{fig:cnn13} and \ref{fig:cnn14}. The convolutional and pooling kernels are launched with a 3D global size corresponding to the number of outputs and their sizes, while the ReLu, fully connected and Softmax layers are launched with a 1D global size corresponding to the number of outputs of the layer (mentioned in Table \ref{table:mnist_layers_comp}.  Also, the sequential variant of the code written in C++ was executed on the two CPUs, and timings were noted. \newline\newline
 The following results were obtained on Intel(R) Core(TM) i3-2350M, Intel(R) Xeon(R) E5-1650 CPU, and NVIDIA Quadro 600 GPU.
 
 \begin{table}[h!]
@@ -283,15 +297,15 @@ The following results were obtained on Intel(R) Core(TM) i3-2350M, Intel(R) Xeon
  \hline
  \multicolumn{1}{|c|}{\bfseries Device} & \multicolumn{1}{c|}{\bfseries i3-2350M} & \multicolumn{1}{c|}{\bfseries E5-1650} & \multicolumn{1}{c|}{\bfseries Quadro 600} \\
  \hline
- Initialize Application & & 1.3 & 1.5 \\
+ Initialize Application & 1.6 & 1.3 & 1.5 \\
  \hline
- Allocate Host Memory & & 16.9 & 16.5 \\
+ Allocate Host Memory & 17.2 & 16.9 & 16.5 \\
  \hline
- Initialize Device & & 78408.9 & 36985.2 \\ 
+ Initialize Device & 81058.2 & 78408.9 & 36985.2 \\ 
  \hline
- Build Kernel & & 130634.2 & 16914.6 \\
+ Build Kernel & 152719.7  & 130634.2 & 16914.6 \\
  \hline
- Allocate Device Memory &  & 1025.2 & 1364.7 \\
+ Allocate Device Memory & 1312.1  & 1025.2 & 1364.7 \\
  \hline
  OpenCL Kernel Execution &1223.8 &  397.7 & 3903.5 \\
  \hline
@@ -304,11 +318,11 @@ The following results were obtained on Intel(R) Core(TM) i3-2350M, Intel(R) Xeon
 
 \subsection{Performance Analysis}
 \label{sect5_3_3}
-The results above in Table \ref{table:mnist_timings} show the time taken on three different processors for initializing the application, allocating memory in the host, initializing the device on which the kernels will execute on, building the kernels, allocating memory on the device, and the execution of all kernels. The sequential execution timing indicates the time taken by the CPU to run the C++ code for digit recognition.
+The results above in Table \ref{table:mnist_timings} show the time taken on three different processors for initializing the application, allocating memory in the host, initializing the device on which the kernels will execute, building the kernels, allocating memory on the device, and the execution of all kernels. The sequential execution timing indicates the time taken by the CPU to run the C++ code for digit recognition.
 
 \subsubsection*{Performance in GOPS}
 \label{sect5_3_3_a}
-Based on the total number of computations found out in Section \ref{sect5_3_1} and execution times in Table \ref{table:mnist_timings}, the performance of the devices was calculated in \ac{GOPS}. The following formula was used to derive this value:
+Based on the total number of computations found out in Section \ref{sect5_3_1} and execution times in Table \ref{table:mnist_timings}, the performance of the devices was calculated in Giga Operations Per Second (\ac{GOPS}). The following formula was used to derive this value:
 \[Performance \, in \, GOPS=\frac{Number \, of \, computations}{Execution \, time \, in \, ns}\]
 
 \begin{table}[h!]
@@ -333,6 +347,14 @@ Based on the total number of computations found out in Section \ref{sect5_3_1} a
 \subsubsection*{Discussion}
 \label{sect5_3_3_b}
 
-Comparing the timing values for the CPUs from Tables and \ref{table:mnist_timings}, the extent of parallelism introduced by OpenCL can be evidently noticed. There is a speedup of 69 times for Intel(R) Core(TM) i3-2350M and 85 times for Intel(R) Xeon(R) E5-1650. 
-\newline\newline
-%From the results, it is evident that both the CPUs, i5-5200 and Xeon E5-1650 take much lesser time than the NVIDIA Quadro 600 GPU in the kernel execution – their performance is 10.6 and 9.89 times better than the GPU’s. This could be reasoned by making the point that OpenCL parallelizes the code on both the CPUs and GPU, but the execution is not parallel enough to exploit the full usage of the GPU’s performance capabilities. Also, the kernel execution time is for the completion of all the kernels, between which data transfers take up more time as compared to the CPU. The host and the target being CPU and GPU, respectively, increase the communication bottleneck drastically and leads directly to having a greater execution time for the GPU. In case of the CPUs, the communication requires hardly any time, leading to a smaller execution time. \newline\newline
+Comparing the timing values for the CPUs from Tables and \ref{table:mnist_timings}, the extent of parallelism introduced by OpenCL can be evidently noticed. There is a speedup of 69 times for Intel(R) Core(TM) i3-2350M and 85 times for Intel(R) Xeon(R) E5-1650. \newline\newline
+As evident from Table \ref{table:mnist_gops}, the performance of Intel(R) Xeon(R) E5-1650 CPU running OpenCL kernels is the best at 24.79 GOPS, followed by Intel(R) Core(TM) i3-2350M at 8.06 GOPS and then by NVIDIA Quadro 600 GPU at 2.53 GOPS. This can be attributed to the device characteristics, which were queried using provided APIs by OpenCL seen as follows:
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=11cm]{figures/Devquery.png}
+\caption{Device characterisitcs of Intel Xeon E5-1650 CPU and NVIDIA Quadro 600 CPU}
+\label{fig:cnn17}
+\end{figure}
+
+Due to higher number of compute units (12) for the CPU, OpenCL is able to parrallelise the code to a much greater extent, as compared to the GPU (2). Also, the clock frequency at which the CPU can execute at (3.2 GHz) is much higher than that of  the GPU (1.28 GHz). Thus, the CPU shows better performance in executing OpenCL parallelised code.

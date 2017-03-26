@@ -1,12 +1,12 @@
 \chapter{The OpenCL Programming Model}
 \label{ch4_opencl}
 
-OpenCL is a framework for writing application programs that run across heterogeneous platforms, comprising \ac{GPU}, \ac{CPU}, \ac{DSP}, \ac{FPGA}, and other processors or hardware accelerators \cite{opencl_wiki}. A framework suited for parallel programming, it has been standardized by the Khronos group, made up of companies like AMD, Apple, Intel, NVIDIA, Qualcomm, Sony, Xilinx, etc.\cite{opencl_fixstars}.
+OpenCL is a framework for writing application programs that run across heterogeneous platforms, comprising \ac{GPU}, \ac{CPU}, \ac{DSP}, \ac{FPGA}, and other processors or hardware accelerators \cite{opencl_wiki}. A framework suited for parallel programming, it has been standardized by the Khronos group, which includes companies like AMD, Apple, Intel, NVIDIA, Qualcomm, Sony, Xilinx, etc.\cite{opencl_fixstars}.
 
 \section{Introduction}
 \label{sect4_1}
 
-OpenCL is truly the first open programming standard for general-purpose computations on heterogeneous systems, allowing programmers to target their source code on multi-core CPUs, GPUs, and other devices. It specifies a programming language (centered on the C99 standard) for programming these devices and provides \ac{API}s, to control the platform and execute programs on various computing devices. OpenCL is vendor independent and thus not specialized for any device. Therefore, OpenCL is a powerful way to write parallel programs capable of running on a wide range of devices. \newline\newline
+OpenCL is truly the first open programming standard for general-purpose computations on heterogeneous systems, allowing programmers to target their source code on multi-core CPUs, GPUs, and other devices. It specifies a programming language (centered on the C99 standard) for programming these devices and provides \ac{API}s, to control the platform and execute programs on heterogeneous computing devices. OpenCL is vendor independent and thus not specialized for any device. Therefore, OpenCL is a powerful way to write parallel programs capable of running on a wide range of devices. \newline\newline
 The framework includes a language, API, libraries and a runtime system to support software development. The architecture of OpenCL can be described using a hierarchy of models \cite{opencl_ajg}:
 
 \begin{itemize}
