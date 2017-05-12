@@ -1,18 +1,18 @@
 \chapter{Convolutional Neural Networks}
 \label{ch5_cnn}
 
-Convolutional Neutral Network (CNN) is a classification of multi-layered neural networks \cite{cnn_lecun_lenet5}. CNNs have excellent performance in areas such as image recognition and classification.  CNNs are at the core of state-of-the-art approaches to a variety of computer vision tasks, including image classification \cite{kriz_suts_hinton_nips2012} and object detection \cite{gir_don_dar_mal_cvpr2014}. They are widely used in the detection and identification of faces, objects and animals, apart from powering robot vision and driverless cars \cite{cnn_karn}. LeNet-5 is one such model designed for handwritten and machine-printed character and digit recognition.
+Convolutional Neutral Network (CNN) is a classification of multi-layered neural networks \cite{cnn_lecun_lenet5}. CNNs have excellent performance in areas such as image recognition and classification.  CNNs are at the core of state-of-the-art approaches to a variety of computer vision tasks, including image classification \cite{kriz_suts_hinton_nips2012} and object detection \cite{gir_don_dar_mal_cvpr2014}. LeNet-5 is one such model designed for handwritten and machine-printed character and digit recognition.  
 
 \section{Introduction}
 \label{sect5_1}
 
 \subsection{Neural Networks}
 \label{sect5_1_1}
-An Artificial Neural Network, simply put as Neural Network, is a computational model motivated by the manner in which neural networks in the human brain and nervous system process information \cite{cnn_karn}. The field of Neural Networks was primarily inspired by the objective of modeling biological neural systems, but has since diverged and become a part of engineering and achieving great results in machine learning \cite{nn_stanford_1}. \newline\newline The fundamental building block of a neural network is the neuron, also referred to as node. The following figures shows a biological neuron and its computational model are related: \newline
+An Artificial Neural Network, simply put as Neural Network, is a computational model motivated by the manner in which neural networks in the human brain and nervous system process information \cite{cnn_karn}. The field of Neural Networks was primarily inspired by the objective of modeling biological neural systems, but has since diverged and become a part of engineering and achieving great results in machine learning \cite{nn_stanford_1}. \newline\newline The fundamental building block of a neural network is the neuron (or node). The following figures shows a biological neuron and its computational model are related:
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=8cm]{figures/Neuron.png}
+\includegraphics[width=7cm]{figures/Neuron.png}
 \caption{Representation of a biological neuron\cite{nn_stanford_1}}
 \label{fig:cnn1}
 \end{figure}
@@ -24,31 +24,31 @@ An Artificial Neural Network, simply put as Neural Network, is a computational m
 \label{fig:cnn2}
 \end{figure}
 
-In this model, a node gets inputs from other node or an external source, and calculates an output. Inputs have associated weights assigned on basis of their relevance to other input nodes. The node applies a function on the weighted sum of inputs, as shown in Figure \ref{fig:cnn3}.
 \begin{figure}[h!]
 \centering
-\includegraphics[width=10cm]{figures/Input_and_Output_to_a_Node.png}
+\includegraphics[width=8cm]{figures/Input_and_Output_to_a_Node.png}
 \caption{Computation in a Neuron\cite{nn_karn}}
 \label{fig:cnn3}
 \end{figure}
 
+In this model, a node gets inputs from other node or an external source, and calculates an output. Inputs have associated weights assigned based on their relevance to other input nodes. The node applies a function on the weighted sum of inputs, as shown in Figure \ref{fig:cnn3}.\newline\newline
 The neuron receives inputs x1 and x2 with weights w1 and w2. Each neuron also has another input 1, with a weight \textbf{bias} associated with it. The bias value provides each node a trainable constant value.\newline\newline 
 The function applied to the sum of weighted inputs, known as Activation Function, is a non-linear function introduced to force neurons to learn non-linear representations, as most of real world data is non-linear. Following are some common activation functions used:
 
 \begin{itemize}
-\item Sigmoid \newline
-Takes a real-valued input and squeezes it in the range 0 to 1
+\item Sigmoid:
+Takes a real-valued input and compresses it within the range 0 to 1
 \begin{equation}
 \mathbf{\sigma(x) = 1 / (1 + exp(-x))}
 \end{equation}
 
-\item tanh \newline
+\item tanh:
 Takes a real-valued input and squeezes it in the range -1 to 1
 \begin{equation}
 \mathbf{tanh(x) = 2 \sigma (2x)-1}
 \end{equation}
 
-\item ReLU \newline
+\item ReLU:
 Takes a real-valued input and thresholds it at zero (replaces negative values with zero)
 f(x) = max(0, x)
 \begin{equation}
@@ -64,29 +64,26 @@ One of the first and simplest neural networks devised was the feedforward neural
 \caption{Feedforward Neural Network \cite{nn_karn}}
 \label{fig:cnn4}
 \end{figure}
-Information only moves in the forward direction in a feedforward neural network. Input nodes receive signals from the outside world and pass on the information forward to the hidden nodes, which perform computations and propagate information to the output nodes. The output nodes carry out some calculations and transfer the result to the outside world. There can only be one input and output layer of nodes, but multiple hidden layers of nodes in a feedforward neural network.\newline\newline 
+Information only moves in the forward direction in a feedforward neural network. Input nodes receive signals from the outside world and pass on the information to the hidden nodes, which perform computations and forward the information to output nodes. The output nodes carry out some calculations and send the result to the outside world. There can only be one input and output layer of nodes, but multiple hidden layers of nodes in a feedforward neural network.\newline\newline 
 They are of two types, \textbf{Single Layer Perceptron} and \textbf{Multi Layer Perceptron} (MLP). The former does not consist of any hidden nodes in the middle, while the the latter has at least one hidden layer. MLPs are very useful in several practical learning applications.
 \subsubsection{Training}
 \label{sect5_1_1_2}
 For any neural network to accurately learn relationships between inputs and outputs and generate correct predictions, training is required. For an MLP to learn, back propagation algorithm is used.\newline\newline
 Back-propagation is one of the many ways to train a MLP. It is a supervised learning algorithm which learns from labeled training datasets. Back-propagation algorithm trains the MLP by correcting its output when a mistake is made. Its objective is to assign correct weights to the connections between nodes in different layers, so as to generate accurate outputs. \newline\newline
-In the beginning, all edge weights are assigned random values. For every input in the training dataset, the MLP is activated and its output is noticed and checked against the desired output from the labeled data. The error is then “propagated” back to the previous layer. This error is computed and the weights are updated. This process repeats until the output error is less than a pre-specified threshold.\newline\newline
+Initially, all edge weights are assigned random values. For every input in the training dataset, the MLP is activated and its output is noticed and checked against the desired output from the labeled data. The error is then “propagated” back to the previous layer. This error is computed and the weights are updated. This process repeats until the output error is less than a pre-specified threshold.\newline\newline
 Once the algorithm finishes, a “learned” neural network is created which can work with new inputs. It will have learned from millions of example inputs (labeled data) and from mistakes made in predicting outputs (error propagation).
-
 
 \subsubsection{Visualisation}
 \label{sect5_1_1_3}
-Andy Harley developed a two-dimensional and three-dimensional representation of an MLP trained to recognise the handwritten digits from the \ac{MNIST} database \cite{harley2015isvc}. The following figure shows how a MLP is visualised in 3D.
-
+Andy Harley developed a two-dimensional and three-dimensional representation of an MLP trained to recognise the handwritten digits from the \ac{MNIST} database \cite{harley2015isvc}. The following figure shows how a MLP is visualised in 3D.\newline\newline
 \begin{figure}[h!]
 \centering
 \includegraphics[width=12cm]{figures/Fully_Connected_MLP_3D.png}
 \caption{3D Visualisation of a fully connected MLP \cite{harley2015isvc}}
 \label{fig:cnn5}
 \end{figure}
-
 This MLP network has 784 nodes on the bottom layer (corresponding to pixels), 300 nodes in the first hidden layer, 100 nodes in the second hidden layer, and 10 nodes in the output layer (corresponding to the 10 digits)\cite{harley2015isvc}. \newline\newline
-A brighter colour corresponds to a node which has a higher output value than others. In the input layer, the bright nodes are the ones receiving higher numerical pixel values as input. In the output layer, the only bright node corresponds to the digit 4, indicating that the MLP has correctly classified the input digit as 4.
+A brighter colour represents a node which has a higher output value than others. In the input layer, the bright nodes are the ones receiving higher numerical pixel values as input. In the output layer, the only bright node corresponds to the digit 4, indicating that the MLP correctly classified the input digit as 4.
 
 \subsection{Convolutional Neural Networks}
 \label{sect5_1_2}
@@ -94,7 +91,7 @@ CNNs are quite similar to regular neural networks – they are composed of neuro
 
 \subsubsection{Architecture}
 \label{sect5_1_2_1}
-CNNs are biologically-inspired variants of MLPs. They take benefit of the fact that inputs accepted are images, and constrain the architecture in a more sensible way. Unlike a regular Neural Network, the layers of a CNN consist of neurons arranged in 3 dimensions: width, height, depth. Neurons in a layer are only be connected to a small region of the layer before it, instead of all neurons in a fully-connected way.Every layer transforms a 3D input to 3D output using some differentiable function. Eventually, the final output layer is one-dimensional, as the full image gets reduced into a single vector of class scores by the end of all processing.
+CNNs take benefit of the fact that inputs accepted are images, and constrain the architecture in a more sensible way. Unlike a regular Neural Network, the layers of a CNN consist of neurons arranged in 3 dimensions. Neurons in a layer are only be connected to a small region of the layer before it, instead of all the neurons in a fully-connected way. Every layer transforms a 3D input to 3D output using some differentiable function. Eventually, the final output layer is one-dimensional, as the full image gets reduced into a single vector of scores by the end of all processing.
 
 \begin{figure}[h!]
 \centering
@@ -105,13 +102,13 @@ CNNs are biologically-inspired variants of MLPs. They take benefit of the fact t
 \label{fig:cnn6}
 \end{figure}
 
-For accuracy in predictions made by neural networks, a lot depends on how the layers are defined by the architecture. In our case, we are going to study the LeNet-5 architecture. 
+For accuracy in predictions made by neural networks, a lot depends on how the layers are defined by the architecture. In this case, the LeNet-5 architecture is studied. 
 
 \subsection*{LeNet-5 Architecture}
 \label{sect5_1_2_1a}
 
 This was one of the very first convolutional neural network, conceptualised in 1994, which propelled the field of Deep Learning. Yann LeCun, a French scientist was the person behind this pioneering work, achieved as a result of several successful iterations since 1988 \cite{cnn_culurciello}. Several new architectures have been proposed in the recent years which have improved features over LeNet, but they are all based upon the foundation of Lenet. \newline\newline
-The network receives an image as an input and assigns probabilities to various output possibilities. The one with the highest probability is the classified character or digit. Following are the various steps involved in the classification process:
+The network receives an image as an input and assigns probabilities to various output possibilities. The one with the highest probability is the classified character or digit. Following are the steps involved in the classification process:
 \begin{figure}[h!]
 \centering
 \includegraphics[width=\linewidth]{figures/Lenet5.png}
@@ -129,11 +126,10 @@ The operations forming the building blocks of every convolutional neural network
 
 \subsubsection*{Convolution Layer}
 \label{sect5_1_2_1a_a}
-Channel is a traditional term used to refer to a the coloured component of an image. A coloured image from a has three channels – red, green and blue, and could be imagined as three 2D-matrices stacked over each other (one for each color), each having pixel values in the range 0 to 255.\newline\newline
+Channel is a traditional term used to refer to the coloured component of an image. A coloured image has three channels – red, green and blue, and could be imagined as three 2D-matrices stacked over each other (one for each color).\newline\newline
 On the other hand, grayscale images have just one channel. The value of each pixel in the matrix will range from 0 to 255 – zero indicating black and 255 indicating white. Convolution layer extracts key features from the input image using convolution operations. It preserves the spatial relationship between pixels by learning image features using small squares of input data.\newline\newline
 The image is convolved with multiple filters, resulting in the formation of different feature maps. Essentially, each filer is a 2D matrix (for a grayscale image), based on the value of whose individual elements, feature maps vary. \newline\newline
 The orange matrix is slided over the image matrix, 1 pixel  at a time (also called ‘stride’), and for each position, an element wise multiplication is computed (between the two matrices). The multiplication outputs are added to get the final integer which makes one element of the output matrix at the corresponding position. The 3×3 filter only observes one part of the input image in each stride.\newline\newline
-For example, if there is a 5x5 image convolved with a 3x3 filter as follows, a feature map will be generated based on the convolution result. For a different filter matrix, another feature map would have been generated.\newline\newline
 \begin{figure}[h!]
 \centering
 \includegraphics[width=3cm]{figures/Image.png}
@@ -142,16 +138,14 @@ For example, if there is a 5x5 image convolved with a 3x3 filter as follows, a f
 \caption{Convolution operation in action - a 5x5 Image  and a 3x3 filter}
 \label{fig:cnn8}
 \end{figure}
-
+For example, if there is a 5x5 image convolved with a 3x3 filter, a feature map will be generated based on the convolution result. For a different filter matrix, another feature map would have been generated.\newline\newline
 \begin{figure}[h!]
 \centering
 \includegraphics[width=3cm]{figures/Convolution_Result.png}
-\caption{Convolution operation in action - a 5x5 Image  and a 3x3 filter}
+\caption{Result of convoluting a 5x5 Image against a 3x3 filter}
 \label{fig:cnn9}
 \end{figure}
-
 In the practical world, a CNN learns the values or weights of these filters itself during the training process. The greater the number of filters, the more image features are extracted and the better the network becomes at recognizing patterns in images, not seen previously.
-
 
 \subsubsection*{Pooling Layer}
 \label{sect5_1_2_1a_b}
@@ -177,12 +171,6 @@ This is an additional layer utilised to introduce non-linearity in the image fea
 \begin{equation}
 \mathbf{Output = max(0, input)}
 \end{equation}
-\begin{figure}[h!]
-\centering
-\includegraphics[width=8cm]{figures/ReLu_Layer.png}
-\caption{Non-linearity operation in ReLU layer}
-\label{fig:cnn12}
-\end{figure}\newline
 This operation is done on every single element of the image or its feature map(s), replacing every negative value with a zero.
 \begin{figure}[h!]
 \centering
@@ -197,30 +185,27 @@ The purpose of ReLU is to introduce non-linearity in our CNN, since most of the 
 
 The fully connected layer is a classic \ac{MLP} using a softmax activation function in the output layer. Each node from the previous layer is connected to each node in the the next layer, hence the term "fully connected".\newline\newline
 The output from the convolutional and pooling layers represent high-level features of the input image. The purpose of this fully connected layer is to use these features for classifying the input image into various categories, depending on the training data. \newline\newline
-The sum of output probabilities from the Fully Connected Layer is 1. This is ensured by using the \textbf{softmax} as the activation function in the output layer of the Fully Connected Layer. The \textbf{softmax} function takes a vector of arbitrary real-valued scores and squashes it to a vector of values between zero and one that sum to one.
+The sum of output probabilities from the Fully Connected Layer is 1, ensured by using \textbf{softmax} as the activation function in the output layer. The \textbf{softmax} function takes a vector of arbitrary real-valued scores and squashes it to a vector of values between zero and one that sum to one.
 
 \subsection*{Training}
 \label{sect5_1_2_1b}
-The training of a CNN follows the same methods as those for a regular neural network. All filters and weights are assigned with random values. The network then accepts an image as its input and performs the convolution, pooling, and non-linearity operations, calculating its output probability in the end. This prediction may or may not be accurate, since the weights were assigned randomly.\newline\newline
-The total error is computed at the output layer. Afterwards, back propagation is used to calculate the gradients of the error with respect to all weights in the network and gradient descent is used to update the values of all weights to minimise the output error. The weights are updated in proportion to their contribution to the total error. \newline\newline
-These steps are repeated across all images present in the dataset to train the CNN completely, which results in a "learned" network. 
+The training of a CNN follows the same methods as those for a regular neural network. All filters and weights are assigned with random values. The network then accepts an image as its input and performs the convolution, pooling, and non-linearity operations, calculating its output probability in the end. This prediction may not be accurate, since weights were assigned randomly.\newline\newline
+The total error is computed at the output layer. Afterwards, back propagation is used to calculate the gradients of the error with respect to all weights in the network and gradient descent is used to update the values of all weights to minimise the output error. The weights are updated in proportion to their contribution to the total error. These steps are repeated across all images present in the dataset to train the CNN completely, which produces a "learned" network. 
 \subsubsection{Visualisation}
 \label{sect5_1_2_2}
-Along with visualising \ac{MLP}, Andy Harley developed a visualisation tool for a CNN trained to recognise handwritten digits from the MNIST database \cite{harley2015isvc} as well. \newline\newline
-The following figure shows how a network can be visualised in 2D.
-
+Along with visualising \ac{MLP}, Andy Harley developed a visualisation tool for a CNN trained to recognise handwritten digits from the MNIST database \cite{harley2015isvc}. 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=13cm]{figures/ConvNet_2D.png}
+\includegraphics[width=12cm]{figures/ConvNet_2D.png}
 \caption{2D Visualisation of a CNN recognising MNIST handwritten digits \cite{harley2015isvc}}
-\label{fig:cnn14}
+\label{fig:cnn13}
 \end{figure}
 
-This CNN has 1024 nodes on the bottom layer (corresponding to pixels), six 5x5 (stride 1) convolutional filters in the first hidden layer, followed by sixteen 5x5 (stride 1) convolutional filters in the second hidden layer, then three fully-connected layers, with 120 nodes in the first, 100 nodes in the second, and 10 nodes in the third. The convolutional layers are each followed by a downsampling layer that does 2x2 max pooling (with stride 2)\cite{harley2015isvc}.
+The above figure shows how a network can be visualised in 2D. This CNN has 1024 nodes on the bottom layer (corresponding to pixels), six 5x5 (stride 1) convolutional filters in the first hidden layer, followed by sixteen 5x5 (stride 1) convolutional filters in the second hidden layer, then three fully-connected layers, with 120 nodes in the first, 100 nodes in the second, and 10 nodes in the third. The convolutional layers are each followed by a downsampling layer that does 2x2 max pooling (with stride 2)\cite{harley2015isvc}.
 
 \section{MNIST Database}
 \label{sect5_2}
-The \ac{MNIST} database is an enormous database of handwritten digits which is frequently utilized for training different image processing procedures \cite{mnist_wiki}. It is also extensively used for training and testing in the field of machine learning. \newline\newline 
+The \ac{MNIST} database is an enormous database of handwritten digits which is frequently used as a training dataset for different image processing procedures \cite{mnist_wiki}. It is widely used for training and testing in the field of machine learning. \newline\newline 
 The MNIST database consists of 60,000 training and testing images \cite{mnist_kus_ernst}. Samples from National Institute of Standards and Technology’s (NIST) original training and testing dataset were remixed to generate the MNIST database. The digits have been size-normalized and centered in a fixed-size image of 20x20 while preserving their aspect ratio \cite{cnn_lecun_mnist_app}. The resulting images contain grey levels because of anti-aliasing methods used by the normalization algorithm. The images were centred in a 28x28 image by calculating the centre of mass of the pixels and rendering the image to place this point at the centre of the 28x28 field. \newline\newline
 The database is a good starting point for individuals who desire to learn machine learning techniques and pattern recognition methods on real-world data while spending marginal efforts on preprocessing and formatting. When one learns how to program, there's a tradition to print "Hello World" in his first program. Similar to how programming has Hello World, machine learning has MNIST. \newline\newline
 A number of scientific papers have been written to attempt achieving the lowest error rate in predicting the digits – one paper achieves a rate as low as 0.23 percent using a hierarchical system of convolutional neural networks.
@@ -231,8 +216,7 @@ An existing real word application was obtained and executed to further gauge the
 
 \subsection{Analysis of Application Code}
 \label{sect5_3_1}
-After understanding how the LeNet-5 architecture works, the application was studied and the sizes and computations of the various layers within the CNN were determined. For each layer, mathematical operations like add, substract, multiply, divide and finding the maximum of two numbers were counted as operations.\newline\newline
-The layers in the network can be represented as follows:
+After understanding how the LeNet-5 architecture works, the application was studied and the sizes and computations of the various layers within the CNN were determined. In each layer, addition, subtraction, multiplication, division and maximum operations were counted to calculate the total number of computations.
 \begin{figure}[h!]
 \centering
 \includegraphics[width=13cm]{figures/Papaa_LeNet5-1.png}
@@ -244,10 +228,10 @@ The layers in the network can be represented as follows:
 \centering
 \includegraphics[width=\linewidth]{figures/Papaa_LeNet5-2.png}
 \caption{Representation of the classification process - \textit{Part 2}}
-\label{fig:cnn16}
+\label{fig:cnn15}
 \end{figure}
 
-The following table indicates the use of various layers from the LeNet-5 architecture in this application. Each layer has an input size, output size and number of computations associated with it.\newline
+The layers in the network can be represented as shown in Figures \ref{fig:cnn14} and \ref{fig:cnn14}. Table \ref{table:mnist_layers_comp} indicates various layers from the LeNet-5 architecture used in this application. Each layer has an input size, output size and number of computations associated with it.
 
 \begin{table}[h!]
 \centering
@@ -283,7 +267,7 @@ From Table \ref{table:mnist_layers_comp}, it can be calculated that the total nu
 
 \subsection{Results}
 \label{sect5_3_2}
-The MNIST handwritten digit recognition application was executed on different devices - two CPUs and one GPU, and average timings were calculated for different parts in the execution of kernels. There is a total of eight kernels executing on the device, launched by the host one after the other. Each kernel corresponds to a layer, as show in Figures \ref{fig:cnn13} and \ref{fig:cnn14}. The convolutional and pooling kernels are launched with a 3D global size corresponding to the number of outputs and their sizes, while the ReLu, fully connected and Softmax layers are launched with a 1D global size corresponding to the number of outputs of the layer (mentioned in Table \ref{table:mnist_layers_comp}.  Also, the sequential variant of the code written in C++ was executed on the two CPUs, and timings were noted. \newline\newline
+The MNIST handwritten digit recognition application was executed in parallel on different devices - two CPUs and one GPU, and average timings were calculated for different parts in the execution of kernels. Also, the sequential variant of the code written in C++ was executed on the two CPUs, and timings were noted. \newline\newline
 The following results were obtained on Intel(R) Core(TM) i3-2350M, Intel(R) Xeon(R) E5-1650 CPU, and NVIDIA Quadro 600 GPU.
 
 \begin{table}[h!]
@@ -314,7 +298,8 @@ The following results were obtained on Intel(R) Core(TM) i3-2350M, Intel(R) Xeon
  \end{tabular}
  \label{table:mnist_timings}
 \end{table}
-%Kernel Execution &12223.8 & 16251.4 & 18930.7 & 15581.6 & 3903.5 \\
+
+There is a total of eight kernels executing on the device, launched by the host one after the other. Each kernel corresponds to a layer, as show in Figures \ref{fig:cnn14} and \ref{fig:cnn15}. The convolutional and pooling kernels are launched with a 3D global size corresponding to the number of outputs and their sizes, while the ReLu, fully connected and Softmax layers are launched with a 1D global size corresponding to the number of outputs of the layer (mentioned in Table \ref{table:mnist_layers_comp}. 
 
 \subsection{Performance Analysis}
 \label{sect5_3_3}

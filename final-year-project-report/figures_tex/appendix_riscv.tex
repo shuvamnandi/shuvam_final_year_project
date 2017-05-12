@@ -12,332 +12,6 @@
 
 \begin{table}[!h]
 \centering
-\caption{RISC-V Processor Testbench}
-\label{riscvcode1:tb}
-\begin{tabular}{l}
-\toprule
-\begin{lstlisting}[columns=fullflexible, language=Verilog]
-module testbench_rvproc;
-
-	// Inputs
-	reg clk;
-	reg rst;
-	reg [`ISIZE-1:0] addr; 
-
-	// Outputs
-	wire [`DSIZE-1:0] instr_out;
-
-	rvproc uut (
-		.clk(clk), 
-		.rst(rst), 
-		.PCOUT(addr), 
-		.instr_out(instr_out));
-        
-	always #5 clk = ~clk;
-	initial 
-	  begin
-	  // Initialize Inputs
-	  clk = 0;
-          rst = 1;
-	  addr = 32'h0000_0000;
-      
-	  // Wait 20 ns for global reset to finish
-          #20;
-          
-	  // Add stimulus here
-	  rst = 0;
-	  addr = 32'h0000_0000;
-	end	
-endmodule
-\end{lstlisting}
-\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!h]
-\centering
-\caption{RISC-V Processor Program Counter and Control Unit}
-\label{riscvcode2:pc_cu}
-\begin{tabular}{l}
-\toprule
-\begin{lstlisting}[columns=fullflexible, language=Verilog]
-module program_counter(input clk, input rst, input [`ISIZE - 1:0]nextPC, 
-output reg [`ISIZE - 1:0]currPC);
-  always @( posedge clk)
-  begin
-      if (rst) begin  currPC <= 16'h0000; end
-      else begin currPC <= nextPC; end
-  end
-endmodule
-\end{lstlisting}
-\\
-\midrule
-
-\begin{lstlisting}[columns=fullflexible, language=Verilog]
-module control(input reg [3:0] instr_code, output reg wen, output reg mem_read, 
-output reg mem_write, output reg AluToReg, output reg branch, output reg jr, output reg jal);  
-  initial
-  begin
-	wen = 0; mem_read = 0; mem_write = 0; AluToReg = 1;
-	branch=0;jr=0;jal=0;
-  end  
-  always@(*)
- 	 begin
-		wen = 1; mem_read = 0; mem_write = 0; AluToReg = 1;
-		branch = 0;	jr=0; jal=0;
-		case(instr_code)
-			`LW: begin
-				mem_read = 1;
-				AluToReg = 0;
-			end
-			`SW: begin
-				wen = 0;
-				mem_write = 1;
-			end
-			`JR: begin
-				wen = 0;
-				jr = 1;
-			end
-			`JAL: begin
-				wen = 0;
-				jr = 1;	jal = 1;
-			end
-			`BNE: begin
-				wen = 0;
-				branch = 1;
-			end
-		endcase
-	end
-endmodule
-\end{lstlisting}
-\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!h]
-\centering
-\caption{RISC-V Processor Decoder}
-\label{riscvcode3:dec}
-\begin{tabular}{l}
-\toprule
-\begin{lstlisting}[columns=fullflexible, language=Verilog]
-module decoder(
-    input [`ISIZE-1:0] instr,  //32-bit instruction	
-    output reg [3:0] instr_code, //Instruction code
-    output reg [`ASIZE-1:0] rs1,    //Source Register address 1
-    output reg [`ASIZE-1:0] rs2,    //Source Register address 2
-    output reg [`ASIZE-1:0] rd,     //Destination Register address
-    output reg [`DSIZE-1:0] imm    //Sign extended immediate value
-    );
- 
-    always @(*)
-    begin        
-        case(instr[6:0])
-
-          `RTYPE_OPC: begin
-              rs1 = instr[19:15];
-              rs2 = instr[24:20];
-              rd = instr[11:7];
-              case(instr[31:25])        //ADD MORE CASES HERE FOR SUB, SRA
-                7'b0000000: begin
-                  case(instr[14:12])    //ADD MORE CASES HERE FOR AND, OR, XOR, SLT, SLTU, SRL, SLL
-                    3'b000: instr_code = `ADD;    
-		  endcase
-                end
-                7'b0000001: instr_code = `MUL;
-              endcase
-          end
-
-          `ITYPE_OPC: begin
-              rs1 = instr[19:15];
-              imm={{20{instr[31]}}, {{instr[31:20]}}};
-              rd = instr[11:7];
-              case(instr[14:12])
-                3'b000: instr_code = `ADDI;
-              endcase
-          end
-
-          `LW_OPC: begin
-            rs1 = instr[19:15];
-            imm={{20{instr[31]}}, {{instr[31:20]}}};
-            rd = instr[11:7];
-            instr_code = `LW;
-          end
-
-    		  `SW_OPC: begin
-            rs1 = instr[19:15];
-            rs2 = instr[24:20];
-            imm={{20{instr[31]}}, {{{{instr[31:25]}, {instr[11:7]}}}}};
-            instr_code = `SW;
-          end
-          `JAL_OPC: begin //NOT COMPLETE
-            rd = instr[11:7];
-            imm={{12{instr[31]}}, {{instr[31:12]}}};
-            instr_code = `JAL;
-          end
-          
-          `JR_OPC: begin
-            rs1 = instr[19:15];
-            instr_code = `JR;
-          end
-          
-    		  `CONBRANCH_OPC: begin
-            rs1 = instr[19:15];
-            rs2 = instr[24:20];
-            imm={{21{instr[31]}}, {{{{instr[7]}, {instr[30:25]}, {instr[11:8]}}}}};
-            case(instr[14:12])
-              3'b001: instr_code = `BNE;
-            endcase
-          end
-        endcase
-    end
-endmodule
-\end{lstlisting}
-\\
-\bottomrule
-\end{tabular}
-\end{table}
-\begin{table}[!h]
-\centering
-\caption{RISC-V Processor ALU and Register file}
-\label{riscvcode4:alu_reg}
-\begin{tabular}{l}
-\toprule
-
-\begin{lstlisting}[columns=fullflexible, language=Verilog]
-module alu(
-    clk, rst, instr_code,
-    a,   //1st operand
-    b,   //2nd operand
-    imm, //32 bit immediate value
-    out,   //output
-  	zero   //zer flag bit for branch 
-    );
-    input clk, rst;
-    input[3:0] instr_code;
-    input [`DSIZE-1:0] a, b, imm;
-    output reg [`DSIZE-1:0] out;
-    output reg zero;      
-    always @ * 
-    begin
-      case(instr_code)
-        `ADD: out = a + b;
-        `MUL: out = a * b;
-        `ADDI: out = a + imm;
-        `LW: out = a + imm;
-        `SW: out = a +imm;
-        `BNE: out = a - b;
-      endcase    	
-    	if(out==0)
-    		zero=1;
-    	else
-    		zero=0;
-    end
-endmodule
-\end{lstlisting}
-\\
-\midrule
-
-\begin{lstlisting}[columns=fullflexible, language=Verilog]
-module regfile (input clk, input rst, input write_en, input [`ASIZE-1:0] raddr1, input [`ASIZE-1:0] raddr2, 
-	input [`ASIZE-1:0] waddr, input [`DSIZE-1:0] wdata, output [`DSIZE-1:0] rdata1, 
-    output [`DSIZE-1:0] rdata2);
-
-	reg [`DSIZE-1:0] regdata [0:`NREG-1];
-	
-	integer i;
-	initial begin
-		for (i = 0; i < `NREG; i = i+1)
-			regdata[i] = 0;
-	end
-
-	always@(posedge clk)
-		begin
-			if(rst)
-				begin
-					for (i=0; i<`NREG; i=i+1)
-						regdata[i] <=0;
-					regdata[1] <=1;//initialization regdata[1] is initialized with 1.
-					regdata[2] <=1;//initialization regdata[2] is initialized with 1.
-					regdata[3] <=4;//initialization regdata[3] is initialized with 4.
-					regdata[4] <=3;//initialization regdata[4] is initialized with 3.
-					regdata[5] <=2;//initialization regdata[5] is initialized with 2.
-					regdata[6] <=1;//initialization regdata[6] is initialized with 1.
-					regdata[7] <=6;//initialization regdata[7] is initialized with 6.
-					regdata[8] <=4;//initialization regdata[8] is initialized with 4.
-					regdata[9] <=2;//initialization regdata[9] is initialized with 2.					
-				end
-			else
-				regdata[waddr] <= ((write_en == 1)) ? wdata : regdata[waddr];
-		end
-	assign rdata1 = ((write_en) && (waddr == raddr1)) ? wdata : regdata[raddr1];
-	assign rdata2 = ((write_en) && (waddr == raddr2)) ? wdata : regdata[raddr2];
-
-endmodule
-\end{lstlisting}
-\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!h]
-\centering
-\caption{RISC-V Processor Instruction Memory and Data Memory}
-\label{riscvcode5:top}
-\begin{tabular}{l}
-\toprule
-\begin{lstlisting}[columns=fullflexible, language=Verilog]
-module instruction_memory(input clk, 
-			  input rst, 
-			  input read_en, 
-			  input [`ISIZE-1:0] r_addr, 
-			  output [`ISIZE-1:0] instr_out);
-
-  reg [`ISIZE-1:0] memory [0:`MAX_LINE_LENGTH-1];
-  reg [1023:0] firmware_file;
-  assign instr_out = (read_en==1'b1)? memory[r_addr]: 16'b0;
-  initial 
-      begin 
-	   // Read instructions from firmware.hex file
-	   firmware_file = "firmware.hex";
-	   $readmemh(firmware_file, memory);
-  end
-endmodule
-
-module data_memory(input clk, 
-		   input rst, 
-		   input write_en,
-    		   input read_en, 
-		   input [`DSIZE-1:0] addr,
- 		   input [`DSIZE-1:0] w_data,
-		   output [`DSIZE-1:0] data_out);
-
-  reg [`ISIZE-1:0] memory [0:`MAX_LINE_LENGTH-1];
-  reg [1023:0] memory_file;
-  reg [`ISIZE-1:0] addr_r;
-  assign data_out = (read_en==1'b1)? memory[addr_r]: 16'b0;
-  integer i;
-  initial 
-  begin
-      memory_file = "data_memory.hex";
-      $readmemh(memory_file, memory);
-  end
-  always @ (posedge clk)
-  begin
-          addr_r <= addr;
-          memory[addr_r] <= ((write_en == 1)) ? w_data : memory[addr_r];
-  end
-endmodule
-\end{lstlisting}
-\\
-\bottomrule
-\end{tabular}
-\end{table}
-   
-\begin{table}[!h]
-\centering
 \caption{RISC-V Processor Top Level Unit}
 \label{mem.tbl}
 \begin{tabular}{l}
@@ -353,14 +27,11 @@ wire [`ISIZE-1:0] PC_IN;
 wire [`ISIZE-1:0] PC_OUT;
 wire reg_write_en;
 wire imem_read_en;
-
 //To control reading and writing from data mem
 wire dmem_read_en, dmem_write_en;
 wire aluToReg, branch, jr, jal;
-
 wire [`ASIZE-1:0] r_src_addr1, r_src_addr2, r_dest_addr;
 reg [`ISIZE-1:0] addr;
- 
 // Outputs
 wire [`DSIZE-1:0] data_out;
 wire [`DSIZE-1:0] write_data_reg;
@@ -370,30 +41,21 @@ wire [6:0] opcode;
 wire [`DSIZE-1:0] imm_ext;
 wire [`DSIZE-1:0] alu_out, r_data1, r_data2;
 wire zflag;
-
 assign PC_IN = PC_OUT + 32'b1;
-
 assign write_data_mux = (jal==1) ? PC_OUT : write_data_reg;
 assign write_data_reg = (aluToReg==1) ? (alu_out) : (data_out); 
 //write_data_reg is to be written in Register file
-
 program_counter pc(.clk(clk), .rst(rst), .nextPC(PC_IN), .currPC(PC_OUT)); 
 //PC_OUT is your PC value and PC_IN is your next PC
-
 instruction_memory imem (.clk(clk), .rst(rst), .read_en(1'b1), .r_addr(PC_OUT), .instr_out(instr_out));
-
 data_memory dmem (.clk(clk), .rst(rst), .read_en(dmem_read_en), .write_en(dmem_write_en), 
 .addr(alu_out), .w_data(r_data2), .data_out(data_out));
-
 decoder dec (.instr(instr_out), .instr_code(instr_id), .rs1(r_src_addr1), .rs2(r_src_addr2), 
 .imm(imm_ext), .rd(r_dest_addr));
-
 control ctrl (.instr_code(instr_id), .wen(reg_write_en), .mem_read(dmem_read_en), .mem_write(dmem_write_en), 
 .AluToReg(aluToReg), .branch(branch), .jr(jr), .jal(jal));
-
 regfile rfile(.clk(clk), .rst(rst), .write_en(reg_write_en), .raddr1(r_src_addr1), 
 .raddr2(r_src_addr2), .waddr(r_dest_addr), .wdata(write_data_reg), .rdata1(r_data1), .rdata2(r_data2));
-
 alu alu0(.clk(clk), .rst(rst), .instr_code(instr_id), .a(r_data1), .b(r_data2), .imm(imm_ext), .out(alu_out), .zero(zflag));
 
 endmodule

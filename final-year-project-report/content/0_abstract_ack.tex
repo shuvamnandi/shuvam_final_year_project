@@ -1,0 +1,18 @@
+\chapter*{Abstract} 
+\label{ch0i_Abstract}
+
+The decline of Moore's law has led to a fundamental shift in the design of micro-processor architectures. Devices with parallel processing architectures such as GPUs, FPGAs and DSPs initially used specifically for dedicated tasks are now gaining popularity as accelerators for more general-purpose computations. Performance is exploited in these devices by massively parallelising tasks across various compute units. CUDA and OpenCL are two application programming interface (API) models used to program parallel devices. The long-term objective this project seeks to achieve is the design of hypothetical network of multiple processors, capable of running applications in parallel. \newline
+
+OpenCL is used to facilitate comparison of performance being a cross-compatible framework across multiple heterogeneous platforms. Initially, this report examines the performance of numerous computing devices. A simple matrix multiplication kernel was executed with different mappings of the kernel onto the devices. This was followed by profiling a complex application recognising handwritten digits from the MNIST database. Performance in terms of GOPS was computed from the execution timings obtained and by analysing the number of computations performed in the application. \newline
+
+The second half of this project investigates free ISAs for implementing a processor as the core unit of the hypothetical engine. RISC-V is picked and studied as it provides several extensions to its base integer instruction set, thereby supporting computationally intensive tasks. An existing processor implementation is examined, followed by developing a new implementation based on RV32IM.
+
+
+\chapter*{Acknowledgment} 
+\label{ch0ii_Acknowledgement}
+
+First and foremost, I would like to offer my sincerest gratitude to my supervisor, Assoc Prof Douglas Maskell, for ensuring that this project was a valuable and enriching experience in my final year. \newline\newline
+I would like to extend my gratitude and appreciation to Abhishek Jain for his constant guidance and support in the duration of this project. His constructive feedback, suggestions and friendly nature have always been motivational and inspired me to work towards my objectives. \newline\newline
+I am grateful to Prashant Ravi for his professional guidance, continuous support, and teachings in the beginning, which were essential for me to understand important concepts and topics driving the project. I am also thankful to Swarna Jayaraman for her inputs and feedback on several version of this project. \newline \newline Thanks to Mr. Jeremiah Chua in Hardware and Embedded Systems Lab (HESL) for his technical support and the facilities.\newline\newline
+I would also like to extend my thanks to my examiner, Dr. Sharad Sinha, for taking out time to evaluate my project. \newline\newline
+The list of acknowledgements will not remain complete without mentioning the encouragement and motivation given by my family and friends throughout the year. \newline\newline
